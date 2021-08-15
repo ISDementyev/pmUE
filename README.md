@@ -1,7 +1,6 @@
 # pmvr
 PMVR (Protein Modelling Virtual Reality, Protein Modelling VR) - a repo for visualizing molecules in VR
 
-# Goals 
 ### Main Goals
 1. Find out which engine to use (will likely go with Unreal)
 2. Start researching on how Unreal engine and its programming language treats coordinates
