@@ -6,4 +6,4 @@ PMVR (Protein Modelling Virtual Reality, Protein Modelling VR) - a repo for visu
 2. Since we have chosen to go with Unreal (UE4), PMVR will be more akin to an Unreal plugin than a standalone "game"
 
 ### Research
-1. Will use Unreal Engine (with C++) for the majority of the work.
+1. Will use Unreal Engine (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting.
