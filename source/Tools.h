@@ -25,7 +25,7 @@ void AtomManager::RemoveHydrogens()
         // destroy (remove) all hydrogen atoms in the "game"
         for (int i; i < AllHydrogens.Num(); i++)
         {
-          AllHydrogens[i]->Destroy();
+            AllHydrogens[i]->Destroy();
         }
     }
 }
