@@ -9,30 +9,31 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector> //used for atom coordinates
 
 /**
 * Removes all hydrogens
 */
 void AtomManager::RemoveHydrogens()
 {
-  // find all hydrogen atoms and collect them in an array
-  TArray<AActor*> AllHydrogens;
-  UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
-  
-  if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
-  {
-    // destroy (remove) all hydrogen atoms in the "game"
-    for (int i; i < AllHydrogens.Num(); i++)
+    // find all hydrogen atoms and collect them in an array
+    TArray<AActor*> AllHydrogens;
+    UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
+
+    if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
     {
-      AllHydrogens[i]->Destroy();
+        // destroy (remove) all hydrogen atoms in the "game"
+        for (int i; i < AllHydrogens.Num(); i++)
+        {
+          AllHydrogens[i]->Destroy();
+        }
     }
-  }
 }
 
 /**
 * Reads a pdb file
 */
-void ReadPdb(std::string FileName)
+void ReadPdb(std::string FileName, bool OnlyAtom = true)
 {
     std::fstream MyFile;
     MyFile.open(FileName, std::ios::in);
@@ -40,8 +41,15 @@ void ReadPdb(std::string FileName)
     if (MyFile.is_open())
     {
         std::string line;
-        while (getline(MyFile, line))
+        while (getline(MyFile, line) && line.substr(0, 3) != "END")
         {
+            std::string CheckAtom = line.substr(0, 4); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
+          
+            if (OnlyAtom && CheckAtom == "ATOM")
+            {
+                // This will iterate through all the rows with atoms and create position vectors to function as coordinates
+            }
+          
             std::cout << "Reading line: " << line << std::endl;
         }
         MyFile.close();
