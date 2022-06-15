@@ -56,6 +56,6 @@ void ReadPdb(std::string FileName, bool OnlyAtom = true)
     }
     else
     {
-        std::cout << "Cannot find/open file of name: " << FileName << std::endl;
+        std::cout << "Cannot find/open file of name: " << FileName << "\n";
     }
 }
