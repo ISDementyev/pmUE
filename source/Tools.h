@@ -31,6 +31,38 @@ void AtomManager::RemoveHydrogens()
 }
 
 /**
+* Counts total number of atoms in a pdb file
+*/
+int NumberOfAtoms(std::string FileName)
+{
+    std::fstream MyFile;
+    int counter = 0;
+
+    MyFile.open(FileName, std::ios::in);
+
+    if (MyFile.is_open())
+    {
+        std::string line;
+        while (getline(MyFile, line) && line.substr(0, 3) != "END")
+        {
+            std::string CheckAtom = line.substr(0, 4); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
+            
+            if (CheckAtom == "ATOM")
+            {
+                counter += 1;
+            }
+        }
+        MyFile.close();
+    }
+    else
+    {
+        std::cout << "Cannot find/open file of name: " << FileName << std::endl;
+    }
+
+    return counter;
+}
+
+/**
 * Reads a pdb file
 */
 void ReadPdb(std::string FileName, bool OnlyAtom = true)
