@@ -7,9 +7,10 @@
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <vector> //used for atom coordinates
+#include <fstream> // used to read pdb files
+#include <string> // used for string processing
+#include <vector> // used for atom coordinates (c++ vector creation)
+#include <map> // used for creating dictionaries (maps) of atoms (keys) and their respective position vector (values)
 
 /**
 * Removes all hydrogens
@@ -63,31 +64,53 @@ int NumberOfAtoms(std::string FileName)
 }
 
 /**
-* Reads a pdb file
+* Outputs a dictionary with all atoms in the pdb file and their position vectors (i.e. coordinate)
 */
-void ReadPdb(std::string FileName, bool OnlyAtom = true)
+std::map<std::string, std::vector<double>> AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = false) // should return a map (dictionary) of the atoms and their corresponding decimal coordinates
 {
+    std::map<std::string, std::vector<double>> AtomCoordinates; // dictionary for atom coordinates
     std::fstream MyFile;
+
     MyFile.open(FileName, std::ios::in);
 
     if (MyFile.is_open())
     {
         std::string line;
-        while (getline(MyFile, line) && line.substr(0, 3) != "END")
+        while (getline(MyFile, line)) // "scanner" loop
         {
-            std::string CheckAtom = line.substr(0, 4); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
-          
+            std::string CheckAtom = line.substr(0, 4); // substr returns first 4 characters of the current line, we are looking for "ATOM", in conjuction with OnlyAtom bool
+            //std::cout << "Check Atom: " << CheckAtom << "\n"; //for debugging
+
+            std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
+            std::string AtomName;
+
             if (OnlyAtom && CheckAtom == "ATOM")
             {
-                // This will iterate through all the rows with atoms and create position vectors to function as coordinates
+                std::string AtomName = line.substr(13, 4);
+
+                double X = std::stod(line.substr(32, 6));
+                double Y = std::stod(line.substr(40, 6));
+                double Z = std::stod(line.substr(48, 6));
+
+                // std::cout << "X: " << x << "\n"; // for debugging
+
+                PositionVector.push_back(X);
+                PositionVector.push_back(Y);
+                PositionVector.push_back(Z);
+
+                //std::cout << "Atom Name: " << AtomName << "\n"; // for debugging
             }
-          
-            std::cout << "Reading line: " << line << std::endl;
+
+            AtomCoordinates[AtomName] = PositionVector;
+
+            //std::cout << "Reading line: " << line << std::endl; // for debugging
         }
         MyFile.close();
     }
     else
     {
-        std::cout << "Cannot find/open file of name: " << FileName << "\n";
+        std::cout << "Cannot find/open file of name: " << FileName << std::endl;
     }
+
+    return AtomCoordinates;
 }
