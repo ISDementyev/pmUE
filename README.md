@@ -1,5 +1,5 @@
-# pmvr
-PMVR (Protein Modelling Virtual Reality, Protein Modelling VR) - a repo for visualizing molecules in VR
+# pmUE
+pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visualizer plugin in Unreal
 
 ### Main Ideas
 1. Will use Unreal Engine (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting.
