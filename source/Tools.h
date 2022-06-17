@@ -36,9 +36,12 @@ void AtomManager::RemoveHydrogens()
 }
 
 /**
-* Counts total number of atoms in a pdb file
+ * Counts the number of atoms in the pdb file
+ * @param FileName Name of the pdb file (string)
+ * @param OnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
+ * @return Integer - number of atoms in pdb file
 */
-int NumberOfAtoms(std::string FileName)
+int NumberOfAtoms(std::string FileName, bool OnlyAtom = true)
 {
     std::fstream MyFile;
     int counter = 0;
@@ -51,8 +54,8 @@ int NumberOfAtoms(std::string FileName)
         while (getline(MyFile, line) && line.substr(0, 3) != "END")
         {
             std::string CheckAtom = line.substr(0, 4); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
-            
-            if (CheckAtom == "ATOM")
+
+            if (OnlyAtom && CheckAtom == "ATOM")
             {
                 counter += 1;
             }
@@ -68,7 +71,11 @@ int NumberOfAtoms(std::string FileName)
 }
 
 /**
-* Outputs a dictionary with all atoms in the pdb file and their position vectors (i.e. coordinate)
+ * Acquires coordinates of all atoms from a pdb file
+ * @param FileName Name of the pdb input file (string)
+ * @param OnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
+ * @param Verbosity Tells the function to be verbose or not (true for verbosity)
+ * @return Dictionary (map) containing atom names (key) and their coordinates (value)
 */
 std::map<std::string, std::vector<double>> AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = false) // should return a map (dictionary) of the atoms and their corresponding decimal coordinates
 {
