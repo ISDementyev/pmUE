@@ -29,6 +29,10 @@ void AtomManager::RemoveHydrogens()
             AllHydrogens[i]->Destroy();
         }
     }
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Called RemoveHydrogens() but no hydrogens are in the molecule"));
+    }
 }
 
 /**
