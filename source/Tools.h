@@ -51,7 +51,7 @@ int NumberOfAtoms(std::string FileName, bool OnlyAtom = true)
     if (MyFile.is_open())
     {
         std::string line;
-        while (getline(MyFile, line) && line.substr(0, 3) != "END")
+        while (getline(MyFile, line))
         {
             std::string CheckAtom = line.substr(0, 6); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
 
