@@ -7,3 +7,6 @@ pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visu
 
 ### Collaboration
 As the code is slowly being developed (and recently made online) it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
+
+### Acknowledgement
+If you use any of the code listed here (or the entire plugin) please say so in the acknowledgements section of your published media (e.g. journal, article, video, etc.).
