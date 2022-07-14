@@ -53,17 +53,17 @@ int NumberOfAtoms(std::string FileName, bool OnlyAtom = true)
         std::string line;
         while (getline(MyFile, line))
         {
-            std::string CheckAtom = line.substr(0, 6); // checks if the line starts with "ATOM", in conjuction with OnlyAtom bool
+            std::string CheckAtom = line.substr(0, 6); // checks if the line starts with "ATOM  ", in conjuction with OnlyAtom bool
 
             //std::cout << "CheckAtom: " << CheckAtom << "\n"; // for debugging
 
             if (OnlyAtom && CheckAtom == "ATOM  ")
             {
-                counter += 1;
+                counter++;
             }
             else if (!OnlyAtom && (CheckAtom == "ATOM  " || CheckAtom == "HETATM"))
             {
-                counter += 1;
+                counter++;
             }
         }
         MyFile.close();
