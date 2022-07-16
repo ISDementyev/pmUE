@@ -34,7 +34,6 @@ public:
      */
     void SetID(int NewID);
     
-    
     /**
      * Returns the atom's colour
      * @return The atom's colour
@@ -61,8 +60,7 @@ private:
     string ElementName;
     int ID;
     string Colour;
-    double Radius;
-    
+    double Radius;  
 };
 
 
