@@ -3,8 +3,7 @@
 /**
  * An atom constructor
  */
-Atom::Atom(string en, int id, string c, double r)
-: ElementName{ en }, ID { id }, Colour{ c }, Radius{ r } {}
+Atom::Atom(string en, int id, string c, double r) : ElementName{ en }, ID { id }, Colour{ c }, Radius{ r } {}
 
 /**
  * Returns the atom's element
@@ -57,3 +56,19 @@ void Atom::SetColour(string NewColour)
     Colour = NewColour;
 }
 
+/**
+ * Returns atom's radius
+ * @return Atom's radius (in nm)
+ */
+double Atom::GetRadius()
+{
+    return Radius;
+}
+
+/**
+ * Sets atom's radius
+ */
+void Atom::SetRadius(double NewRadius)
+{
+    Radius = NewRadius;
+}
