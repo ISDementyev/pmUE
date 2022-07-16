@@ -1,4 +1,4 @@
-#include "Atom.hpp"
+#include "Atom.h"
 
 /**
  * An atom constructor
