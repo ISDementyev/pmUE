@@ -36,7 +36,10 @@ int Atom::GetID()
  */
 void Atom::SetID(int NewID)
 {
-    ID = NewID;
+    if (NewID >= 0)
+    {
+        ID = NewID;
+    }
 }
 
 /**
@@ -70,5 +73,8 @@ double Atom::GetRadius()
  */
 void Atom::SetRadius(double NewRadius)
 {
-    Radius = NewRadius;
+    if (NewRadius > 0)
+    {
+        Radius = NewRadius;
+    }
 }
