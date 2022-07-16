@@ -1,10 +1,3 @@
-//
-//  Atom.hpp
-//  pmUE
-//
-//  Created by Ilya Dementyev on 2022-07-15.
-//
-
 #pragma once
 
 #include <iostream>
