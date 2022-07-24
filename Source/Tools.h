@@ -11,7 +11,7 @@
 #include <string> // used for string processing
 #include <vector> // used for atom coordinates (c++ vector creation)
 #include <map> // used for creating dictionaries (maps) of atoms (keys) and their respective position vector (values)
-
+#include <set> // used for making sets (to list unique elements found in a pdb file, among other things)
 
 class Tools {
 public:
@@ -133,5 +133,40 @@ public:
         }
 
         return AtomCoordinates;
+    }
+    
+    /**
+     * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
+     * @param FileName The pdb file's name
+     * @return Set of all unique elements (not including hetatms)
+     */
+    static std::set<std::string> UniqueAtoms(std::string FileName)
+    {
+        // initialize set
+        std::set<std::string> UniqueElements;
+        
+        std::fstream MyFile;
+        
+        MyFile.open(FileName, std::ios::in);
+
+        if (MyFile.is_open())
+        {
+            std::string line;
+            while (getline(MyFile, line)) // "scanner" loop
+            {
+                if (line.substr(0, 4) == "ATOM")
+                {
+                    std::string Element = line.substr(13, 1);
+                    UniqueElements.insert(Element);
+                }
+            }
+            MyFile.close();
+        }
+        else
+        {
+            std::cout << "Cannot find/open file of name: " << FileName << std::endl;
+        }
+        
+        return UniqueElements
     }
 };
