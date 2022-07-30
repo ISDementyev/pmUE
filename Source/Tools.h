@@ -21,25 +21,25 @@ public:
     /**
      * Removes all hydrogens
     */
-    //static void AtomManager::RemoveHydrogens()
-    //{
-    //    // find all hydrogen atoms and collect them in an array
-    //    TArray<AActor*> AllHydrogens;
-    //    UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
+    static void AtomManager::RemoveHydrogens()
+    {
+       // find all hydrogen atoms and collect them in an array
+       TArray<AActor*> AllHydrogens;
+       UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
 
-    //    if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
-    //    {
-    //        // destroy (remove) all hydrogen atoms in the "game"
-    //        for (int i = 0; i < AllHydrogens.Num(); i++)
-    //        {
-    //            AllHydrogens[i]->Destroy();
-    //        }
-    //    }
-    //    else
-    //    {
-    //        UE_LOG(LogTemp, Warning, TEXT("Called RemoveHydrogens() but no hydrogens are in the molecule"));
-    //    }
-    //}
+       if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
+       {
+           // destroy (remove) all hydrogen atoms in the "game"
+           for (int i = 0; i < AllHydrogens.Num(); i++)
+           {
+               AllHydrogens[i]->Destroy();
+           }
+       }
+       else
+       {
+           UE_LOG(LogTemp, Warning, TEXT("Called RemoveHydrogens() but no hydrogens are in the molecule"));
+       }
+    }
 
     /**
      * Counts the number of atoms in the pdb file
@@ -210,7 +210,7 @@ public:
         }
         else
         {
-            //UE_LOG(LogTemp, Warning, TEXT("SetAnElementColourRGB had an improper RGB vector input."));
+            UE_LOG(LogTemp, Warning, TEXT("SetAnElementColourRGB had an improper RGB vector input."));
         }
     }
 
