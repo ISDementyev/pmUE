@@ -13,30 +13,33 @@
 #include <map> // used for creating dictionaries (maps) of atoms (keys) and their respective position vector (values)
 #include <unordered_set> // used for making sets (to list unique elements found in a pdb file, among other things)
 
+/**
+ * Tool class, containing useful functions and attributes for analyzing PDB files
+*/
 class Tools {
 public:
     /**
      * Removes all hydrogens
     */
-    static void AtomManager::RemoveHydrogens()
-    {
-        // find all hydrogen atoms and collect them in an array
-        TArray<AActor*> AllHydrogens;
-        UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
+    //static void AtomManager::RemoveHydrogens()
+    //{
+    //    // find all hydrogen atoms and collect them in an array
+    //    TArray<AActor*> AllHydrogens;
+    //    UGameplayStatics::GetAllActorsWithTag(GetWorld(), "AtomH", AllHydrogens);
 
-        if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
-        {
-            // destroy (remove) all hydrogen atoms in the "game"
-            for (int i = 0; i < AllHydrogens.Num(); i++)
-            {
-                AllHydrogens[i]->Destroy();
-            }
-        }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Called RemoveHydrogens() but no hydrogens are in the molecule"));
-        }
-    }
+    //    if (AllHydrogens.Num() > 0) // only execute if there are hydrogens in the molecule
+    //    {
+    //        // destroy (remove) all hydrogen atoms in the "game"
+    //        for (int i = 0; i < AllHydrogens.Num(); i++)
+    //        {
+    //            AllHydrogens[i]->Destroy();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        UE_LOG(LogTemp, Warning, TEXT("Called RemoveHydrogens() but no hydrogens are in the molecule"));
+    //    }
+    //}
 
     /**
      * Counts the number of atoms in the pdb file
@@ -134,7 +137,7 @@ public:
 
         return AtomCoordinates;
     }
-    
+
     /**
      * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
      * @param FileName The pdb file's name
@@ -144,9 +147,9 @@ public:
     {
         // initialize set
         std::unordered_set<std::string> UniqueElementNames;
-        
+
         std::fstream MyFile;
-        
+
         MyFile.open(FileName, std::ios::in);
 
         if (MyFile.is_open())
@@ -166,7 +169,62 @@ public:
         {
             std::cout << "Cannot find/open file of name: " << FileName << std::endl;
         }
-        
+
         return UniqueElementNames;
     }
+
+    /**
+     * Getter function for the ElementColoursRGB vector
+     * @return ElementColoursRGB vector (all elements that have distinct colours)
+    */
+    std::map<std::string, std::vector<int>> GetElementColoursRGB()
+    {
+        return ElementColoursRGB;
+    }
+
+    /**
+     * Setter function to modify the ElementColoursRGB (allows user to edit/add element colour)
+     * @param Name The element's atomic symbol
+     * @param RGBVector The vector containing the RGB colour info that the user wants to add
+    */
+    void SetAnElementColourRGB(std::string Name, std::vector<int>& RGBVector)
+    {
+        bool Valid = true;
+
+        for (int Value : RGBVector)
+        {
+            if (Value < 0 || Value > 255)
+            {
+                Valid = false;
+            }
+        }
+
+        if (RGBVector.size() != 3)
+        {
+            Valid = false;
+        }
+
+        if (Valid)
+        {
+            ElementColoursRGB[Name] = RGBVector;
+        }
+        else
+        {
+            //UE_LOG(LogTemp, Warning, TEXT("SetAnElementColourRGB had an improper RGB vector input."));
+        }
+    }
+
+private:
+    /**
+    * ElementColoursRGB - A dictionary containing RGB values for
+    */
+    std::map<std::string, std::vector<int>>
+        ElementColoursRGB = { {"O", {240, 0, 0}},
+            {"H", {255, 255, 255}},
+            {"C", {200, 200, 200}},
+            {"N", {143, 143, 255}},
+            {"S", {255, 200, 50}},
+            {"P", {255, 165, 0}},
+            {"Fe", {210, 105, 30}},
+            {"Zn", {211, 211, 211}} };
 };
