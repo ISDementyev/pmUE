@@ -2,7 +2,7 @@
 pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visualizer plugin in Unreal
 
 ### Main Ideas
-1. Will use Unreal Engine 4 (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting.
+1. Will use Unreal Engine 4 (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
 
 ### Collaboration
