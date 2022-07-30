@@ -14,7 +14,7 @@
 #include <unordered_set> // used for making sets (to list unique elements found in a pdb file, among other things)
 
 /**
- * Tool class, containing useful functions and attributes for analyzing PDB files
+ * Tools class, containing useful functions and attributes for analyzing PDB files
 */
 class Tools {
 public:
