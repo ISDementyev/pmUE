@@ -167,6 +167,6 @@ public:
             std::cout << "Cannot find/open file of name: " << FileName << std::endl;
         }
         
-        return UniqueElementNames
+        return UniqueElementNames;
     }
 };
