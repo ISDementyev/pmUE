@@ -216,7 +216,7 @@ public:
 
 private:
     /**
-    * ElementColoursRGB - A dictionary containing RGB values for
+    * ElementColoursRGB - A dictionary containing RGB values for various element symbols.
     */
     std::map<std::string, std::vector<int>>
         ElementColoursRGB = { {"O", {240, 0, 0}},
