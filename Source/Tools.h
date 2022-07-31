@@ -103,7 +103,7 @@ public:
             {
                 std::string CheckAtom = line.substr(0, 4); // substr returns first 4 characters of the current line, we are looking for "ATOM", in conjuction with OnlyAtom bool
                 //std::cout << "Check Atom: " << CheckAtom << "\n"; //for debugging
-
+                
                 if (OnlyAtom && CheckAtom == "ATOM")
                 {
                     std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
@@ -120,10 +120,9 @@ public:
                     PositionVector.push_back(Z);
 
                     //std::cout << "Atom Name: " << AtomName << "\n"; // for debugging
+
+                    AtomCoordinates[AtomName] = PositionVector;
                 }
-
-                AtomCoordinates[AtomName] = PositionVector;
-
                 //std::cout << "Reading line: " << line << std::endl; // for debugging
             }
             MyFile.close();
@@ -135,7 +134,7 @@ public:
 
         return AtomCoordinates;
     }
-
+    
     /**
      * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
      * @param FileName The pdb file's name
