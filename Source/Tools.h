@@ -104,11 +104,9 @@ public:
                 std::string CheckAtom = line.substr(0, 4); // substr returns first 4 characters of the current line, we are looking for "ATOM", in conjuction with OnlyAtom bool
                 //std::cout << "Check Atom: " << CheckAtom << "\n"; //for debugging
 
-                std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
-                std::string AtomName;
-
                 if (OnlyAtom && CheckAtom == "ATOM")
                 {
+                    std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
                     std::string AtomName = line.substr(13, 4);
 
                     double X = std::stod(line.substr(32, 6));
