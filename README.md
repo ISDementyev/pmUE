@@ -5,6 +5,7 @@ pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visu
 1. Will use Unreal Engine 4 (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
 3. First the code will be designed standalone; it will then be edited into a format readable by the UE
+4. Need to change AcquireCoordinates in Tools.h to return something other than a map: atoms with the same name will be overwritten.
 
 ### Collaboration
 As the code is slowly being developed, it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
