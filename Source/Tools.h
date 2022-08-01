@@ -10,7 +10,7 @@
 #include <fstream> // used to read pdb files
 #include <string> // used for string processing
 #include <vector> // used for atom coordinates (c++ vector creation)
-#include <map> // used for creating dictionaries (maps) of atoms (keys) and their respective position vector (values)
+#include <map> // used for creating dictionaries (see private access modifier below)
 #include <unordered_set> // used for making sets (to list unique elements found in a pdb file, among other things)
 
 /**
@@ -89,51 +89,57 @@ public:
      * @param Verbosity Tells the function to be verbose or not (true for verbosity)
      * @return Dictionary (map) containing atom names (key) and their coordinates (value)
     */
-    static std::map<std::string, std::vector<double>> AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = false) // should return a map (dictionary) of the atoms and their corresponding decimal coordinates
+    static std::tuple<std::vector<std::string>, std::vector<std::vector<double>>>
+AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = false) // should return a map (dictionary) of the atoms and their corresponding decimal coordinates
+{
+    std::tuple<std::vector<std::string>, std::vector<std::vector<double>>> AtomCoordinates; // dictionary for atom coordinates
+    std::vector<std::string> AtomSymbols;
+    std::vector<std::vector<double>> PositionVectors;
+    std::fstream MyFile;
+
+    MyFile.open(FileName, std::ios::in);
+
+    if (MyFile.is_open())
     {
-        std::map<std::string, std::vector<double>> AtomCoordinates; // dictionary for atom coordinates
-        std::fstream MyFile;
-
-        MyFile.open(FileName, std::ios::in);
-
-        if (MyFile.is_open())
+        std::string line;
+        while (getline(MyFile, line)) // "scanner" loop
         {
-            std::string line;
-            while (getline(MyFile, line)) // "scanner" loop
+            std::string CheckAtom = line.substr(0, 4); // substr returns first 4 characters of the current line, we are looking for "ATOM", in conjuction with OnlyAtom bool
+            //std::cout << "Check Atom: " << CheckAtom << "\n"; //for debugging
+
+            if (OnlyAtom && CheckAtom == "ATOM")
             {
-                std::string CheckAtom = line.substr(0, 4); // substr returns first 4 characters of the current line, we are looking for "ATOM", in conjuction with OnlyAtom bool
-                //std::cout << "Check Atom: " << CheckAtom << "\n"; //for debugging
+                std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
+                std::string AtomName = line.substr(13, 1);
                 
-                if (OnlyAtom && CheckAtom == "ATOM")
-                {
-                    std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
-                    std::string AtomName = line.substr(13, 4);
+                double X = std::stod(line.substr(32, 6));
+                double Y = std::stod(line.substr(40, 6));
+                double Z = std::stod(line.substr(48, 6));
 
-                    double X = std::stod(line.substr(32, 6));
-                    double Y = std::stod(line.substr(40, 6));
-                    double Z = std::stod(line.substr(48, 6));
+                // std::cout << "X: " << x << "\n"; // for debugging
 
-                    // std::cout << "X: " << x << "\n"; // for debugging
+                PositionVector.push_back(X);
+                PositionVector.push_back(Y);
+                PositionVector.push_back(Z);
 
-                    PositionVector.push_back(X);
-                    PositionVector.push_back(Y);
-                    PositionVector.push_back(Z);
+                //std::cout << "Atom Name: " << AtomName << "\n"; // for debugging
 
-                    //std::cout << "Atom Name: " << AtomName << "\n"; // for debugging
-
-                    AtomCoordinates[AtomName] = PositionVector;
-                }
-                //std::cout << "Reading line: " << line << std::endl; // for debugging
+                AtomSymbols.push_back(AtomName);
+                PositionVectors.push_back(PositionVector);
             }
-            MyFile.close();
-        }
-        else
-        {
-            std::cout << "Cannot find/open file of name: " << FileName << std::endl;
+            //std::cout << "Reading line: " << line << std::endl; // for debugging
         }
 
-        return AtomCoordinates;
+        AtomCoordinates = std::make_tuple(AtomSymbols, PositionVectors);
+        MyFile.close();
     }
+    else
+    {
+        std::cout << "Cannot find/open file of name: " << FileName << std::endl;
+    }
+
+    return AtomCoordinates;
+}
     
     /**
      * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
