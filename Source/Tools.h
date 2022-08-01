@@ -110,7 +110,7 @@ AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = 
             if (OnlyAtom && CheckAtom == "ATOM")
             {
                 std::vector<double> PositionVector; // (will be a) 1x3 vector containing the atom coordinates
-                std::string AtomName = line.substr(13, 4);
+                std::string AtomName = line.substr(13, 1);
                 
                 double X = std::stod(line.substr(32, 6));
                 double Y = std::stod(line.substr(40, 6));
