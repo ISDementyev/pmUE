@@ -187,10 +187,10 @@ AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = 
 
     /**
      * Setter function to modify the ElementColoursRGB (allows user to edit/add element colour)
-     * @param Name The element's atomic symbol
+     * @param AtomSymbol The element's atomic symbol
      * @param RGBVector The vector containing the RGB colour info that the user wants to add
     */
-    void SetAnElementColourRGB(std::string Name, std::vector<int>& RGBVector)
+    void SetAnElementColourRGB(std::string AtomSymbol, std::vector<int>& RGBVector)
     {
         bool Valid = true;
 
@@ -199,6 +199,7 @@ AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = 
             if (Value < 0 || Value > 255)
             {
                 Valid = false;
+                break; // for efficiency
             }
         }
 
@@ -209,11 +210,37 @@ AcquireCoordinates(std::string FileName, bool OnlyAtom = true, bool Verbosity = 
 
         if (Valid)
         {
-            ElementColoursRGB[Name] = RGBVector;
+            ElementColoursRGB[AtomSymbol] = RGBVector;
         }
         else
         {
             UE_LOG(LogTemp, Warning, TEXT("SetAnElementColourRGB had an improper RGB vector input."));
+        }
+    }
+    
+    /**
+     * Returns dictionary of van der Waals radii of atoms
+     * @return The specified dictionary, VDWRadii.
+    */
+    std::map<std::string, double> GetVDWRadii()
+    {
+        return VDWRadii;
+    }
+
+    /**
+     * Sets a van der Waals radius for a specific atomic symbol in the VDWRadii dictionary.
+     * @param AtomSymbol The symbol for the atom's element.
+     * @param Radius The radius to set.
+    */
+    void SetVDWRadius(std::string AtomSymbol, double Radius)
+    {
+        if (Radius > 0)
+        {
+            VDWRadii[AtomSymbol] = Radius;
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("SetVDWRadius had an input radius lower than zero."));
         }
     }
 
@@ -230,4 +257,15 @@ private:
             {"P", {255, 165, 0}},
             {"Fe", {210, 105, 30}},
             {"Zn", {211, 211, 211}} };
+    
+    /**
+     * VDWRadii - a dictionary containing hard-sphere-approximated radii of atoms (in nm). Some disagreements between literature values exist.
+     * Taken from the averages of Tables 1, 2 and 7 in "Van der Waals Radii of Elements" (Batsanov, 2001).
+    */
+    std::map<std::string, double> VDWRadii = { {"H", 0.12}, {"C", 0.17}, {"N", 0.15}, {"O", 0.14}, {"S", 0.18}, {"P", 0.208}, {"Fe", 0.20}, {"Zn", 0.21} };
+
+    /**
+     * RadiiScale - a value corresponding to how large or small to make the atom spheres appear.
+    */
+    int RadiiScale{ -1 };
 };
