@@ -9,7 +9,7 @@
  * @param OnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
  * @return An integer number of atoms in pdb file
 */
-int64 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool OnlyAtom)
+int32 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool OnlyAtom)
 {
 	return -1;
 }
