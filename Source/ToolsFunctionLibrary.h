@@ -14,7 +14,7 @@ class PMUEINTEGRATION_API UToolsFunctionLibrary : public UBlueprintFunctionLibra
 {
 	GENERATED_BODY()
 		UFUNCTION(BlueprintCallable)
-		static int64 NumberOfAtoms(FString Filename, bool OnlyAtom = true);
+		static int32 NumberOfAtoms(FString Filename, bool OnlyAtom = true);
 
 		UFUNCTION(BlueprintCallable)	
 		static TSet<FString> GetUniqueElements(FString Filename);
