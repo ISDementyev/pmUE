@@ -25,8 +25,4 @@ class PMUEINTEGRATION_API UToolsFunctionLibrary : public UBlueprintFunctionLibra
 
 	UFUNCTION(BlueprintCallable)
 	double GetVDWRadius(FString AtomSymbol);
-
-
-
-
 };
