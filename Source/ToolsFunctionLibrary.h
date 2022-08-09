@@ -17,7 +17,7 @@ class PMUEINTEGRATION_API UToolsFunctionLibrary : public UBlueprintFunctionLibra
 		static int64 NumberOfAtoms(FString Filename, bool OnlyAtom = true);
 
 		UFUNCTION(BlueprintCallable)	
-		static TSet<FString> UniqueElements(FString Filename);
+		static TSet<FString> GetUniqueElements(FString Filename);
 
 		UFUNCTION(BlueprintCallable)
 		FVector GetElementColourRGB(FString AtomSymbol);
