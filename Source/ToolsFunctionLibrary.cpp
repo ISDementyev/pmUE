@@ -83,7 +83,10 @@ FVector UToolsFunctionLibrary::GetElementColourRGB(FString AtomicSymbol)
  * @param ChemicalSymbol The atom's chemical symbol
  * @return The van der Waals radius of the atom (in nm)
 */
-double UToolsFunctionLibrary::GetVDWRadius(FString AtomSymbol)
+float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol)
 {
-	return 0.0;
+	TMap<FString, float> VDWRadii{ {TEXT("H"), 0.12}, {TEXT("C"), 0.17}, {TEXT("N"), 0.15}, {TEXT("O"), 0.14}, 
+		{TEXT("S"), 0.18}, {TEXT("P"), 0.208}, {TEXT("Fe"), 0.20}, {TEXT("Zn"), 0.21} };
+	
+	return VDWRadii[ChemicalSymbol];
 }
