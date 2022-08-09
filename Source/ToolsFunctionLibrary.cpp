@@ -19,7 +19,7 @@ int64 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool OnlyAtom)
  * @param FileName The pdb file's name
  * @return Set of all unique elements (not including hetatms)
 */
-TSet<FString> UToolsFunctionLibrary::UniqueElements(FString Filename)
+TSet<FString> UToolsFunctionLibrary::GetUniqueElements(FString Filename)
 {
 	return TSet<FString>();
 }
