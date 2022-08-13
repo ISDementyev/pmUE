@@ -4,14 +4,38 @@
 #include "ToolsFunctionLibrary.h"
 
 /**
+ * Converts file content into string
+ * @param Filename Name of the file
+ * @return The file's content as an FString
+*/
+FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
+{
+	FString Directory = FPaths::GameSourceDir();
+	IFileManager& File = IFileManager::Get();
+	FString LoadedString;
+
+	if (File.DirectoryExists(*Directory))
+	{
+		FString MyFile = Directory + "/" + Filename;
+		FFileHelper::LoadFileToString(LoadedString, *MyFile);
+	}
+
+	return LoadedString;
+}
+
+
+/**
  * Counts the number of atoms in the pdb file
  * @param FileName Name of the pdb file (string)
- * @param OnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
+ * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
  * @return An integer number of atoms in pdb file
 */
-int32 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool OnlyAtom)
+int32 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool bOnlyAtom)
 {
-	return -1;
+	int32 Counter{ 0 };
+	FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+
+	return Counter;
 }
 
 /**
@@ -19,9 +43,12 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool OnlyAtom)
  * @param FileName The pdb file's name
  * @return Set of all unique elements (not including hetatms)
 */
-TSet<FString> UToolsFunctionLibrary::GetUniqueElements(FString Filename)
+TSet<FString> UToolsFunctionLibrary::UniqueElements(FString Filename)
 {
-	return TSet<FString>();
+	TSet<FString> UniqueChemicalSymbols;
+	FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+
+	return UniqueChemicalSymbols;
 }
 
 /**
