@@ -23,30 +23,29 @@ FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
 	return LoadedString;
 }
 
-
 /**
  * Counts the number of atoms in the pdb file
- * @param FileName Name of the pdb file (string)
+ * @param LoadedString String loaded from pdb file
  * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
  * @return An integer number of atoms in pdb file
 */
-int32 UToolsFunctionLibrary::NumberOfAtoms(FString Filename, bool bOnlyAtom)
+int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom)
 {
 	int32 Counter{ 0 };
-	FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+	//FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
 
 	return Counter;
 }
 
 /**
  * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
- * @param FileName The pdb file's name
+ * @param LoadedString String loaded from pdb file
  * @return Set of all unique elements (not including hetatms)
 */
-TSet<FString> UToolsFunctionLibrary::UniqueElements(FString Filename)
+TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString)
 {
 	TSet<FString> UniqueChemicalSymbols;
-	FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+	//FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
 
 	return UniqueChemicalSymbols;
 }
@@ -117,3 +116,4 @@ float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol)
 	
 	return VDWRadii[ChemicalSymbol];
 }
+
