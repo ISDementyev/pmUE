@@ -21,23 +21,22 @@ class PMUEINTEGRATION_API UToolsFunctionLibrary : public UBlueprintFunctionLibra
 		*/
 		static FString ConvFileToString(FString Filename);
 
-
 		UFUNCTION(BlueprintCallable)
 		/**
 		 * Counts the number of atoms in the pdb file
-		 * @param FileName Name of the pdb file (string)
+		 * @param LoadedString String loaded from pdb file
 		 * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
 		 * @return An integer number of atoms in pdb file
 		*/
-		static int32 NumberOfAtoms(FString Filename, bool bOnlyAtom);
+		static int32 NumberOfAtoms(FString& LoadedString, bool bOnlyAtom);
 	
 		UFUNCTION(BlueprintCallable)
 		/**
 		 * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
-		 * @param FileName The pdb file's name
+		 * @param LoadedString String loaded from pdb file
 		 * @return Set of all unique elements (not including hetatms)
 		*/
-		static TSet<FString> UniqueElements(FString Filename);
+		static TSet<FString> UniqueElements(FString& LoadedString);
 
 		UFUNCTION(BlueprintCallable)
 		/**
