@@ -12,4 +12,6 @@ As the code is slowly being developed, it is recommended to open your own branch
 ### Acknowledgement
 If you use any of the code listed here (or the entire plugin) please say so in the acknowledgements section of your published media (e.g. journal, article, video, etc.).
 
-A good template: "The molecular visualization was performed using pmUE (https://github.com/ISDementyev/pmUE)"
+A good template: "The molecular visualization was performed using pmUE (https://github.com/ISDementyev/pmUE)".
+
+Of course, you may write this in whatever language is required for you to write in.
