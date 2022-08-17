@@ -29,7 +29,7 @@ FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
  * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
  * @return An integer number of atoms in pdb file
 */
-int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom)
+int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom = true)
 {
 	int32 Counter{ 0 };
 
@@ -68,44 +68,44 @@ TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString)
  * @param ChemicalSymbol The atom's chemical symbol, as a string
  * @return RGB vector corresponding to the colour of the input atom (pink if not assigned)
 */
-FVector UToolsFunctionLibrary::GetElementColourRGB(FString AtomicSymbol)
+FVector UToolsFunctionLibrary::GetElementColourRGB(FString ChemicalSymbol)
 {
-	if (AtomicSymbol == TEXT("H"))
+	if (ChemicalSymbol == TEXT("H"))
 	{
 		// white
 		return FVector{ 255, 255, 255 }; 
 	}
-	else if (AtomicSymbol == TEXT("C")) 
+	else if (ChemicalSymbol == TEXT("C")) 
 	{
 		// black
 		return FVector{ 0, 0, 0 }; 
 	} 
-	else if (AtomicSymbol == TEXT("N")) 
+	else if (ChemicalSymbol == TEXT("N")) 
 	{
 		// blue
 		return FVector{ 143, 143, 255 }; 
 	} 
-	else if (AtomicSymbol == TEXT("O")) 
+	else if (ChemicalSymbol == TEXT("O")) 
 	{
 		// red
 		return FVector{ 240, 0, 0 }; 
 	} 
-	else if (AtomicSymbol == TEXT("P")) 
+	else if (ChemicalSymbol == TEXT("P")) 
 	{
 		// brownish-yellow
 		return FVector{ 255, 165, 0 }; 
 	} 
-	else if (AtomicSymbol == TEXT("S")) 
+	else if (ChemicalSymbol == TEXT("S")) 
 	{
 		// yellow
 		return FVector{ 255, 200, 50 }; 
 	} 
-	else if (AtomicSymbol == TEXT("Fe")) 
+	else if (ChemicalSymbol == TEXT("Fe")) 
 	{
 		// brown
 		return FVector{ 210, 105, 30 }; 
 	} 
-	else if (AtomicSymbol == TEXT("Zn")) 
+	else if (ChemicalSymbol == TEXT("Zn")) 
 	{
 		// silver-gray
 		return FVector{ 100, 100, 100 }; 
