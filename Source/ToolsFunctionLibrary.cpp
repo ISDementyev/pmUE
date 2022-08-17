@@ -32,7 +32,20 @@ FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
 int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom)
 {
 	int32 Counter{ 0 };
-	//FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		{
+			Counter++;
+		}
+		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		{
+			Counter++;
+		}
+	}
 
 	return Counter;
 }
