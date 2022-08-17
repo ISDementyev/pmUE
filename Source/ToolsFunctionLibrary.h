@@ -13,6 +13,8 @@ UCLASS()
 class PMUEINTEGRATION_API UToolsFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
+
+public:
 		UFUNCTION(BlueprintCallable)
 		/**
 		 * Converts file content into string
