@@ -18,5 +18,5 @@ Of course, you may write this in whatever language is required for you to write 
 
 ### Citations
 Avogadro 1.2.0 was used for the creation of some models in [PDBFiles](https://github.com/ISDementyev/pmUE/tree/main/PDBFiles)
-- Avogadro: an open-source molecular builder and visualization tool. Version 1.XX. [http://avogadro.cc/](http://avogadro.cc/)
+- Avogadro: an open-source molecular builder and visualization tool. Version 1.XX. http://avogadro.cc/
 - Marcus D Hanwell, Donald E Curtis, David C Lonie, Tim Vandermeersch, Eva Zurek and Geoffrey R Hutchison; “Avogadro: An advanced semantic chemical editor, visualization, and analysis platform” [*Journal of Cheminformatics* **2012**, 4:17.](http://www.jcheminf.com/content/4/1/17)
