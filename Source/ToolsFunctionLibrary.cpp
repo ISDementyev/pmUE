@@ -55,10 +55,23 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
  * @param LoadedString String loaded from pdb file
  * @return Set of all unique elements (not including hetatms)
 */
-TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString)
+TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool bOnlyAtom)
 {
 	TSet<FString> UniqueChemicalSymbols;
-	//FString LoadedString = UToolsFunctionLibrary::ConvFileToString(Filename);
+	
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		{
+			UniqueChemicalSymbols.Add(LoadedString.Mid(i + 13, 2));
+		}
+		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		{
+			UniqueChemicalSymbols.Add(LoadedString.Mid(i + 13, 2));
+		}
+	}
 
 	return UniqueChemicalSymbols;
 }
