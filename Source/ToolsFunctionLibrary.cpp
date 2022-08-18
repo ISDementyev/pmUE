@@ -29,7 +29,7 @@ FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
  * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
  * @return An integer number of atoms in pdb file
 */
-int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom = true)
+int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom)
 {
 	int32 Counter{ 0 };
 
