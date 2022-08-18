@@ -30,7 +30,7 @@ public:
 		 * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
 		 * @return An integer number of atoms in pdb file
 		*/
-		static int32 NumberOfAtoms(FString& LoadedString, bool bOnlyAtom);
+		static int32 NumberOfAtoms(FString& LoadedString, bool bOnlyAtom = true);
 	
 		UFUNCTION(BlueprintCallable)
 		/**
@@ -38,7 +38,7 @@ public:
 		 * @param LoadedString String loaded from pdb file
 		 * @return Set of all unique elements (not including hetatms)
 		*/
-		static TSet<FString> UniqueElements(FString& LoadedString);
+		static TSet<FString> UniqueElements(FString& LoadedString, bool bOnlyAtom = true);
 
 		UFUNCTION(BlueprintCallable)
 		/**
