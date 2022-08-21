@@ -23,10 +23,11 @@ FString UToolsFunctionLibrary::ConvFileToString(FString Filename)
 	return LoadedString;
 }
 
+
 /**
  * Counts the number of atoms in the pdb file
  * @param LoadedString String loaded from pdb file
- * @param bOnlyAtom Boolean that, if true, does not consider heteroatoms (HETATM rows in pdb file)
+ * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
  * @return An integer number of atoms in pdb file
 */
 int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom)
@@ -53,6 +54,7 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
 /**
  * Returns set of all unique elements found in the pdb - useful for blueprint generation/modification
  * @param LoadedString String loaded from pdb file
+ * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
  * @return Set of all unique elements (not including hetatms)
 */
 TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool bOnlyAtom)
@@ -79,46 +81,46 @@ TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool 
 /**
  * Getter function for a 3-vector corresponding to the input atom's color
  * @param ChemicalSymbol The atom's chemical symbol, as a string
- * @return RGB vector corresponding to the colour of the input atom (pink if not assigned)
+ * @return RGB vector corresponding to the colour of the input atom (pink if unknown symbol)
 */
-FVector UToolsFunctionLibrary::GetElementColourRGB(FString ChemicalSymbol)
+FVector UToolsFunctionLibrary::GetElementColourRGB(FString AtomicSymbol)
 {
-	if (ChemicalSymbol == TEXT("H"))
+	if (AtomicSymbol == TEXT("H"))
 	{
 		// white
 		return FVector{ 255, 255, 255 }; 
 	}
-	else if (ChemicalSymbol == TEXT("C")) 
+	else if (AtomicSymbol == TEXT("C")) 
 	{
 		// black
 		return FVector{ 0, 0, 0 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("N")) 
+	else if (AtomicSymbol == TEXT("N")) 
 	{
 		// blue
 		return FVector{ 143, 143, 255 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("O")) 
+	else if (AtomicSymbol == TEXT("O")) 
 	{
 		// red
 		return FVector{ 240, 0, 0 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("P")) 
+	else if (AtomicSymbol == TEXT("P")) 
 	{
 		// brownish-yellow
 		return FVector{ 255, 165, 0 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("S")) 
+	else if (AtomicSymbol == TEXT("S")) 
 	{
 		// yellow
 		return FVector{ 255, 200, 50 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("Fe")) 
+	else if (AtomicSymbol == TEXT("Fe")) 
 	{
 		// brown
 		return FVector{ 210, 105, 30 }; 
 	} 
-	else if (ChemicalSymbol == TEXT("Zn")) 
+	else if (AtomicSymbol == TEXT("Zn")) 
 	{
 		// silver-gray
 		return FVector{ 100, 100, 100 }; 
@@ -143,3 +145,44 @@ float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol)
 	return VDWRadii[ChemicalSymbol];
 }
 
+/**
+ * Reads and returns coordinates from PDB
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @param Transforms The Coordinate array
+ * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+*/
+void UToolsFunctionLibrary::GetCoordinates(FString& LoadedString, TArray<FTransform>& Transforms, bool bOnlyAtom)
+{
+	int32 SpreadOutFactor{ 75 };
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		{
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn generic atom"));
+
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+			Transforms.Add(FTransform(FVector(X, Y, Z) * SpreadOutFactor));
+			
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
+		}
+		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		{
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+			Transforms.Add(FTransform(FVector(X, Y, Z) * SpreadOutFactor));
+
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
+		}
+	}
+}
