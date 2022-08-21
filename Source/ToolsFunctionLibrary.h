@@ -55,4 +55,13 @@ public:
 		 * @return The van der Waals radius of the atom (in nm)
 		*/
 		static float GetVDWRadius(FString ChemicalSymbol);
+		
+		UFUNCTION(BlueprintCallable)
+		/**
+		 * Reads and returns coordinates from PDB
+		 * @param LoadedString The PDB file loaded as a UE-type string
+		 * @param Transforms The Coordinate array 
+		 * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+		*/
+		static void GetCoordinates(FString& LoadedString, TArray<FTransform>& Transforms, bool bOnlyAtom = true);
 };
