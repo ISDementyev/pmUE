@@ -2,7 +2,7 @@
 pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visualizer plugin in Unreal
 
 ### Current State
-Currently, the project can spawn atoms in-game, with the AtomConstructorOne class blueprint. The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively.
+Currently, the project can spawn atoms in-game, with the AtomConstructorOne class blueprint. The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively. Appropriate bond lengths as well as atom colours and radii must still be implemented.
 
 ![Methane](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/SpawnedMethane.png "Spawned Methane")
 ![AceticAcid](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/SpawnedAceticAcid.png "Spawned Acetic Acid")
