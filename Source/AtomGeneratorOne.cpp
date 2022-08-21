@@ -24,18 +24,17 @@ void AAtomGeneratorOne::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtoms(PDBContent);
+// 	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
+// 	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtoms(PDBContent);
 
-	if (InstancedStaticMeshComponent->GetInstanceCount() == 0)
+	/*if (InstancedStaticMeshComponent->GetInstanceCount() == 0)
 	{
 		Transforms.Empty(NumberOfAtoms);
 		
-		for (int32 i = 0; i < NumberOfAtoms; i++)
-		{
-			;
-		}
-	}
+		UToolsFunctionLibrary::GetCoordinates(PDBContent, Transforms, false);
+
+		InstancedStaticMeshComponent->AddInstances(Transforms, false);
+	}*/
 }
 
 // Called when the game starts or when spawned
@@ -43,7 +42,13 @@ void AAtomGeneratorOne::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtoms(PDBContent);
 
+	Transforms.Empty(NumberOfAtoms);
+	UToolsFunctionLibrary::GetCoordinates(PDBContent, Transforms, false);
+
+	InstancedStaticMeshComponent->AddInstances(Transforms, true);
 }
 
 // Called every frame
