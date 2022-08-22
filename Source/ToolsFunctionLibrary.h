@@ -64,4 +64,23 @@ public:
 		 * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
 		*/
 		static void GetCoordinates(FString& LoadedString, TArray<FTransform>& Transforms, bool bOnlyAtom = true);
+		
+		UFUNCTION(BlueprintCallable)
+		/**
+		 * Returns the centroid of the PDB, based on atom positions
+		 * @param LoadedString The string contents of the PDB file
+		 * @param bOnlyAtom 
+		 * @return PDB file's centroid coordinate
+		*/
+		static FVector Centroid(FString& LoadedString, bool bOnlyAtom = true);
+
+		UFUNCTION(BlueprintCallable)
+		/**
+		 * Reads and returns centroid-corrected coordinates from PDB
+		 * @param LoadedString The PDB file loaded as a UE-type string
+		 * @param Transforms The coordinate array
+		 * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+		 * @param Centroid Centroid calculated using UToolsFunctionLibrary::Centroid
+		*/
+		static void CentroidCorrected(FString& LoadedString, TArray<FTransform>& Transforms, FVector& CentroidCoord, bool bOnlyAtom = true);
 };
