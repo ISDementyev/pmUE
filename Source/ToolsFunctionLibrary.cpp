@@ -186,3 +186,93 @@ void UToolsFunctionLibrary::GetCoordinates(FString& LoadedString, TArray<FTransf
 		}
 	}
 }
+
+/**
+ * Returns the centroid of the PDB, based on atom positions
+ * @param LoadedString The string contents of the PDB file
+ * @param bOnlyAtom
+ * @return PDB file's centroid coordinate
+*/
+FVector UToolsFunctionLibrary::Centroid(FString& LoadedString, bool bOnlyAtom)
+{
+	// initialize centroid coords
+	float XC = 0, YC = 0, ZC = 0;
+
+	// initialize normalization constant
+	int32 Counter{ 0 };
+	
+	// loop through pdb file
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		{
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+			
+			XC += X;
+			YC += Y;
+			ZC += Z;
+			Counter++;
+		}
+		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		{
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+			XC += X;
+			YC += Y;
+			ZC += Z;
+			Counter++;
+		}
+	}
+
+	return FVector( XC, YC, ZC ) / Counter;
+}
+
+/**
+ * Reads and returns centroid-corrected coordinates from PDB
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @param Transforms The coordinate array
+ * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+ * @param Centroid Centroid calculated using UToolsFunctionLibrary::Centroid
+*/
+void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTransform>& Transforms, FVector& CentroidCoord, bool bOnlyAtom)
+{
+	int32 SpreadOutFactor{ 75 };
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		{
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn generic atom"));
+
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+			//Transforms.Add(FTransform(FVector(X - CentroidCoord.X, Y - CentroidCoord.Y, Z - CentroidCoord.Z) * SpreadOutFactor));
+			Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
+
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
+		}
+		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		{
+			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+			Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
+
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
+		}
+	}
+}
