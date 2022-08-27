@@ -9,6 +9,9 @@ Currently, the project can spawn atoms in-game, with the AtomConstructorOne clas
 
 A centroid function was added that spawns the atoms more towards the center of where the blueprint was placed.
 
+Recently, a HUD was developed as well, that so far shows the filename only (shown below for Methane.pdb). In the future, more details about the loaded file will be written.
+![HUD](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/methane-with-hud.png "Methane with HUD")
+
 ### Main Ideas
 1. Will use Unreal Engine 4 (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
