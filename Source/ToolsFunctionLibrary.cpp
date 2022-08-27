@@ -3,6 +3,8 @@
 
 #include "ToolsFunctionLibrary.h"
 
+#include "ToolsFunctionLibrary.h"
+
 /**
  * Converts file content into string
  * @param Filename Name of the file
@@ -38,11 +40,8 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
 
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
-		{
-			Counter++;
-		}
-		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  "))) 
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			Counter++;
 		}
@@ -60,16 +59,12 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
 TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool bOnlyAtom)
 {
 	TSet<FString> UniqueChemicalSymbols;
-	
+
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
 
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
-		{
-			UniqueChemicalSymbols.Add(LoadedString.Mid(i + 13, 2));
-		}
-		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  "))) || (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			UniqueChemicalSymbols.Add(LoadedString.Mid(i + 13, 2));
 		}
@@ -88,48 +83,48 @@ FVector UToolsFunctionLibrary::GetElementColourRGB(FString AtomicSymbol)
 	if (AtomicSymbol == TEXT("H"))
 	{
 		// white
-		return FVector{ 255, 255, 255 }; 
+		return FVector{ 255, 255, 255 };
 	}
-	else if (AtomicSymbol == TEXT("C")) 
+	else if (AtomicSymbol == TEXT("C"))
 	{
 		// black
-		return FVector{ 0, 0, 0 }; 
-	} 
-	else if (AtomicSymbol == TEXT("N")) 
+		return FVector{ 0, 0, 0 };
+	}
+	else if (AtomicSymbol == TEXT("N"))
 	{
 		// blue
-		return FVector{ 143, 143, 255 }; 
-	} 
-	else if (AtomicSymbol == TEXT("O")) 
+		return FVector{ 143, 143, 255 };
+	}
+	else if (AtomicSymbol == TEXT("O"))
 	{
 		// red
-		return FVector{ 240, 0, 0 }; 
-	} 
-	else if (AtomicSymbol == TEXT("P")) 
+		return FVector{ 240, 0, 0 };
+	}
+	else if (AtomicSymbol == TEXT("P"))
 	{
 		// brownish-yellow
-		return FVector{ 255, 165, 0 }; 
-	} 
-	else if (AtomicSymbol == TEXT("S")) 
+		return FVector{ 255, 165, 0 };
+	}
+	else if (AtomicSymbol == TEXT("S"))
 	{
 		// yellow
-		return FVector{ 255, 200, 50 }; 
-	} 
-	else if (AtomicSymbol == TEXT("Fe")) 
+		return FVector{ 255, 200, 50 };
+	}
+	else if (AtomicSymbol == TEXT("Fe"))
 	{
 		// brown
-		return FVector{ 210, 105, 30 }; 
-	} 
-	else if (AtomicSymbol == TEXT("Zn")) 
+		return FVector{ 210, 105, 30 };
+	}
+	else if (AtomicSymbol == TEXT("Zn"))
 	{
 		// silver-gray
-		return FVector{ 100, 100, 100 }; 
-	} 
-	else 
-	{ 
+		return FVector{ 100, 100, 100 };
+	}
+	else
+	{
 		// pink
-		return FVector{ 255, 16, 240 }; 
-	} 
+		return FVector{ 255, 16, 240 };
+	}
 }
 
 /**
@@ -139,9 +134,9 @@ FVector UToolsFunctionLibrary::GetElementColourRGB(FString AtomicSymbol)
 */
 float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol)
 {
-	TMap<FString, float> VDWRadii{ {TEXT("H"), 0.12}, {TEXT("C"), 0.17}, {TEXT("N"), 0.15}, {TEXT("O"), 0.14}, 
+	TMap<FString, float> VDWRadii{ {TEXT("H"), 0.12}, {TEXT("C"), 0.17}, {TEXT("N"), 0.15}, {TEXT("O"), 0.14},
 		{TEXT("S"), 0.18}, {TEXT("P"), 0.208}, {TEXT("Fe"), 0.20}, {TEXT("Zn"), 0.21} };
-	
+
 	return VDWRadii[ChemicalSymbol];
 }
 
@@ -159,22 +154,12 @@ void UToolsFunctionLibrary::GetCoordinates(FString& LoadedString, TArray<FTransf
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
 
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  "))) 
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			// debugging
 			UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn generic atom"));
 
-			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
-
-			Transforms.Add(FTransform(FVector(X, Y, Z) * SpreadOutFactor));
-			
-			// debugging
-			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
-		}
-		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
-		{
 			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
 			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
 			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
@@ -200,24 +185,14 @@ FVector UToolsFunctionLibrary::Centroid(FString& LoadedString, bool bOnlyAtom)
 
 	// initialize normalization constant
 	int32 Counter{ 0 };
-	
+
 	// loop through pdb file
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
 
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
-		{
-			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
-			
-			XC += X;
-			YC += Y;
-			ZC += Z;
-			Counter++;
-		}
-		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  "))) 
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
 			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
@@ -230,7 +205,7 @@ FVector UToolsFunctionLibrary::Centroid(FString& LoadedString, bool bOnlyAtom)
 		}
 	}
 
-	return FVector( XC, YC, ZC ) / Counter;
+	return FVector(XC, YC, ZC) / Counter;
 }
 
 /**
@@ -248,7 +223,8 @@ void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTra
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
 
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  "))) 
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			// debugging
 			UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn generic atom"));
@@ -261,18 +237,7 @@ void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTra
 			Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
 
 			// debugging
-			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
-		}
-		else if (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))
-		{
-			float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-			float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-			float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
-
-			Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
-
-			// debugging
-			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X, Y, Z);
+			UE_LOG(LogTemp, Warning, TEXT("Spawning generic atom @ (%f, %f, %f)"), X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
 		}
 	}
 }
