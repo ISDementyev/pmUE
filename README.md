@@ -2,15 +2,10 @@
 pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visualizer plugin in Unreal
 
 ### Current State
-Currently, the project can spawn atoms in-game, with the AtomConstructorOne class blueprint. The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively. Appropriate bond lengths as well as atom colours and radii must still be implemented.
+Currently, the project can spawn colored atoms in-game, with the AtomConstructorOne class blueprint. The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively. Appropriate bonds, bond lengths and radii must still be implemented.
 
-![Methane](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/SpawnedMethane.png "Spawned Methane")
-![AceticAcid](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/SpawnedAceticAcid.png "Spawned Acetic Acid")
-
-A centroid function was added that spawns the atoms more towards the center of where the blueprint was placed.
-
-Recently, a HUD was developed as well, that so far shows the filename only (shown below for Methane.pdb). In the future, more details about the loaded file will be written.
-![HUD](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/methane-with-hud.png "Methane with HUD")
+![Methane](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/MethaneWithColor.png "Spawned Methane with Color")
+![AceticAcid](https://github.com/ISDementyev/pmUE/blob/main/Screenshots/AceticAcidWithColor.png "Spawned Acetic Acid with Color")
 
 ### Main Ideas
 1. Will use Unreal Engine 4 (with C++) alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
