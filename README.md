@@ -12,7 +12,7 @@ Currently, the project can spawn colored atoms in-game, with the AtomConstructor
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
 
 ### Collaboration
-As the code is slowly being developed, it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
+To my knowledge, I am the only individual working on this repo. As the code is slowly being developed, it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
 
 ### Acknowledgement
 If you use any of the code listed here (or the entire plugin) please say so in the acknowledgements section of your published media (e.g. journal, article, video, etc.).
