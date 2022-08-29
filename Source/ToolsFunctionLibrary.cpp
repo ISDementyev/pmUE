@@ -241,3 +241,35 @@ void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTra
 		}
 	}
 }
+
+/**
+ * Returns indices of atoms from the PDB file string contents
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+ * @return Map (dictionary) of atom names and their indices from the pdb - format is (Index: AtomName)
+*/
+TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedString, bool bOnlyAtom)
+{
+	int32 Index{ 0 };
+	TMap<int32, FString> AtomNamesAndIndices;
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
+		{
+			// debugging
+			//UE_LOG(LogTemp, Warning, TEXT("Adding atom..."));
+			
+			AtomNamesAndIndices.Add(Index, LoadedString.Mid(i + 13, 2));
+			Index++;
+		}
+	}
+
+	// debugging
+	//UE_LOG(LogTemp, Warning, TEXT("Number of atoms in NameIndex map: %d"), AtomNamesAndIndices.Num());
+
+	return AtomNamesAndIndices;
+}
