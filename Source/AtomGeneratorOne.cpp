@@ -56,16 +56,14 @@ void AAtomGeneratorOne::BeginPlay()
 
 	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
 	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtoms(PDBContent, false);
-
-	Transforms.Empty(NumberOfAtoms);
-
 	FVector CentroidCoord = UToolsFunctionLibrary::Centroid(PDBContent, false);
+	TMap<int32, FString> IndicesAndAtomNames = UToolsFunctionLibrary::AtomNameAndIndex(PDBContent, false);
+
+	Transforms.Empty(NumberOfAtoms);	
 
 	UToolsFunctionLibrary::CentroidCorrected(PDBContent, Transforms, CentroidCoord, false);
 
 	InstancedStaticMeshComponent->AddInstances(Transforms, true);
-
-	TMap<int32, FString> IndicesAndAtomNames = UToolsFunctionLibrary::AtomNameAndIndex(PDBContent, false);
 
 	for (int32 i = 0; i < NumberOfAtoms; i++)
 	{
@@ -79,14 +77,15 @@ void AAtomGeneratorOne::BeginPlay()
 	}	
 
 	// debugging
-// 	for (int32 i = 0; i < IndicesAndAtomNames.Num(); i++)
-// 	{
-// 		UE_LOG(LogTemp, Warning, TEXT("@ Map index %d we have: '%s'"), i, *IndicesAndAtomNames[i]);
-// 	}
+	/*for (int32 i = 0; i < IndicesAndAtomNames.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("@ Map index %d we have: '%s'"), i, *IndicesAndAtomNames[i]);
+	}*/
 
 	// debugging
 	//FString Atom = IndicesAndAtomNames[1]; // all debugging code works with this input. where is the error coming from?
 	//FVector Color = UToolsFunctionLibrary::GetElementColourRGB(Atom);
+
 	//UE_LOG(LogTemp, Warning, TEXT("Color index 0 of white RGB: %f"), Color[0]);
 
 }
