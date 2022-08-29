@@ -66,7 +66,6 @@ void AAtomGeneratorOne::BeginPlay()
 	InstancedStaticMeshComponent->AddInstances(Transforms, true);
 
 	TMap<int32, FString> IndicesAndAtomNames = UToolsFunctionLibrary::AtomNameAndIndex(PDBContent, false);
-	int32 TotalIndices{ NumberOfAtoms * 3 };
 
 	for (int32 i = 0; i < NumberOfAtoms; i++)
 	{
