@@ -83,4 +83,13 @@ public:
 		 * @param Centroid Centroid calculated using UToolsFunctionLibrary::Centroid
 		*/
 		static void CentroidCorrected(FString& LoadedString, TArray<FTransform>& Transforms, FVector& CentroidCoord, bool bOnlyAtom = true);
+		
+		UFUNCTION(BlueprintCallable)
+		/**
+		 * Returns indices of atoms from the PDB file string contents
+		 * @param LoadedString The PDB file loaded as a UE-type string
+		 * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
+		 * @return Map (dictionary) of atom names and their indices from the pdb - format is (Index: AtomName)
+		*/
+		static TMap<int32, FString> AtomNameAndIndex(FString& LoadedString, bool bOnlyAtom = true);
 };
