@@ -11,6 +11,9 @@ Currently, the project can spawn colored atoms in-game, with the AtomConstructor
 1. Unreal Engine 4 (mainly in C++) used alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
 
+### Current Branch
+This branch was designed to explore another possible implementation, that solves the issue with the improper scaling - to create a generator Actor for each element, and spawn the atoms as such, with the individual atom static meshes already setup (for both color and size). 
+
 ### Collaboration
 To my knowledge, I am the only individual working on this repo. As the code is slowly being developed, it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
 
