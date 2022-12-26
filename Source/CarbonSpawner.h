@@ -25,4 +25,8 @@ public:
 
 	UPROPERTY(Transient)
 		TArray<FTransform> Transforms;
+
+private:
+	UPROPERTY(VisibleAnywhere)
+		UInstancedStaticMeshComponent* InstancedStaticMeshComponentCarbon;
 };
