@@ -33,8 +33,9 @@ void ACarbonSpawner::BeginPlay()
 	Super::BeginPlay();
 
 	// file-specific variables - should be kept in a separate file called by all atom spawner Actors
-	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
-	FVector CentroidCoordinate = UToolsFunctionLibrary::Centroid(PDBContent, false);
+	FileData FD;	
+	FString PDBContent = FD.PDBContent;
+	FVector CentroidCoordinate = FD.CentroidCoordinate;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "C " };
@@ -44,9 +45,8 @@ void ACarbonSpawner::BeginPlay()
 	// generates data array of carbons to be spawned
 	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsCarbon, CentroidCoordinate, CurrentElement, false);
 
-	// spawns the actual static mesh	
+	// spawns the actual static mesh
 	InstancedStaticMeshComponentCarbon->AddInstances(TransformsCarbon, true);
-
 }
 
 // Called every frame
