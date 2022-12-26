@@ -33,7 +33,7 @@ void ACarbonSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// file-specific variables - should be kept in a separate file called by all atom spawner Actors
+	// file-specific variables
 	FileData FD;	
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
