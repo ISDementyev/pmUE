@@ -2,6 +2,7 @@
 
 #include "CarbonSpawner.h"
 #include "ToolsFunctionLibrary.h"
+#include "FileData.h"
 
 // Sets default values
 ACarbonSpawner::ACarbonSpawner()
