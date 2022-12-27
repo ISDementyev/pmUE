@@ -67,7 +67,7 @@ int32 UToolsFunctionLibrary::NumberOfAtomsSingleElement(FString& LoadedString, F
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
-		FString Element = LoadedString.Mid(i + 13, 2);
+		FString Element = LoadedString.Mid(i + 77, 2);
 
 		if ((Element == CurrentElement) && ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
 			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM"))))))
@@ -283,7 +283,7 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
 			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
-			if (LoadedString.Mid(i + 13, 2).Equals(Element))
+			if (LoadedString.Mid(i + 77, 2).Equals(Element))
 			{
 				// debugging
 				UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn %s atom"), *Element);
