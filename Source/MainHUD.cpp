@@ -2,13 +2,14 @@
 
 #include "MainHUD.h"
 #include "ToolsFunctionLibrary.h"
+#include "FileData.h"
 
 void AMainHUD::DrawHUD()
 {
 	Super::DrawHUD();
 
-	FString PDBFilename{ "Methane.pdb" };
+	FileData FD;
 
 	// draw (write) PDB filename
-	DrawText(FileNameDisplay + PDBFilename, FLinearColor::Black, HorizontalDeviation, TopDeviation, HudFont);
+	DrawText(FileNameDisplay + FD.FileName, FLinearColor::Black, HorizontalDeviation, TopDeviation, HudFont);
 }
