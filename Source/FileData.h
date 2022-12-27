@@ -12,8 +12,8 @@ public:
 	FileData();
 	~FileData();
 
-public:
-	FString PDBContent = UToolsFunctionLibrary::ConvFileToString("Methane.pdb");
+	FString FileName{ "Methane.pdb" };
+	FString PDBContent = UToolsFunctionLibrary::ConvFileToString(FileName);
 	FVector CentroidCoordinate = UToolsFunctionLibrary::Centroid(PDBContent, false);
 
 };
