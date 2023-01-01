@@ -372,3 +372,26 @@ TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedStri
 	return AtomNamesAndIndices;
 }
 
+/**
+ * Returns UE vector containing indices of atoms that AtomIndex's atom is connected to
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @param AtomIndex The atom whose connectivity info we need
+ * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms (e.g. "HETATM" and "ANISOU" rows, etc.)
+ * @return UE vector containing indices of atoms that AtomIndex's atom is connected to
+*/
+FVector UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom)
+{
+	FVector GVE;
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (bOnlyAtom && ScannedStr.Equals(TEXT("CONECT")))
+		{
+			FString CurrentRow = LoadedString.Mid(i, 30);
+		}
+	}
+
+	return GVE;
+}
