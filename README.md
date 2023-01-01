@@ -11,6 +11,9 @@ The current capabilities are shown below for Methane.pdb and AceticAcid.pdb resp
 1. Unreal Engine 4 (mainly in C++) used alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
 2. pmUE will be more akin to an Unreal plugin than a standalone "game"
 
+### Atom Connectivity
+How atoms are connected will likely be modelled using graph theory. However, UE4 makes this difficult, as having an array within an array is not supported. Hence, a more inefficient, yet functional approach is needed. The best way to do this to my current knowledge is by constructing an array of indices for each atom, containing the indexes of the atoms they are connected to. 
+
 ### Collaboration
 To my knowledge, I am the only individual working on this repo. As the code is slowly being developed, it is recommended to open your own branch if you'd like to add anything to the project. All contributions welcome!
 
