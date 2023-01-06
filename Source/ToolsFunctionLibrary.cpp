@@ -382,6 +382,7 @@ TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedStri
 FVector UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom)
 {
 	FVector GVE;
+	const TCHAR* Delim = TEXT(" ");
 
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
@@ -390,6 +391,11 @@ FVector UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool 
 		if (bOnlyAtom && ScannedStr.Equals(TEXT("CONECT")))
 		{
 			FString CurrentRow = LoadedString.Mid(i, 30);
+			TArray<FString> CulledString;
+			CurrentRow.ParseIntoArray(CulledString, Delim, true);
+			
+			// debugging
+			UE_LOG(LogTemp, Warning, TEXT("CulledString array length: %d"), CulledString.Num());
 		}
 	}
 
