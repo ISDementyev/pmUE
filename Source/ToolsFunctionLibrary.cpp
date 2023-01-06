@@ -396,6 +396,8 @@ FVector UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool 
 			
 			// debugging
 			UE_LOG(LogTemp, Warning, TEXT("CulledString array length: %d"), CulledString.Num());
+			UE_LOG(LogTemp, Warning, TEXT("CulledString[0]: %s"), *CulledString[0]);
+			UE_LOG(LogTemp, Warning, TEXT("CulledString[0] length: %d"), CulledString[0].Len());
 		}
 	}
 
