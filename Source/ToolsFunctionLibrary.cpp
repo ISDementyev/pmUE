@@ -2,11 +2,6 @@
 
 #include "ToolsFunctionLibrary.h"
 
-TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"), 1.5f}, {TEXT("O"), 1.4f},
-		{TEXT("S"), 1.8f}, {TEXT("P"), 2.08f}, {TEXT("Fe"), 2.0f}, {TEXT("Zn"), 2.1f}, {TEXT("H "), 1.2f},
-	{TEXT("C "), 1.7f}, {TEXT("N "), 1.5f}, {TEXT("O "), 1.4f},
-		{TEXT("S "), 1.8f}, {TEXT("P "), 2.08f} };
-
 int32 SpreadOutFactor{ 75 };
 
 /**
@@ -101,70 +96,6 @@ TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool 
 	}
 
 	return UniqueChemicalSymbols;
-}
-
-/**
- * Getter function for a 3-vector corresponding to the input atom's color
- * @param ChemicalSymbol The atom's chemical symbol, as a string
- * @return RGB vector corresponding to the colour of the input atom (pink if unknown symbol)
-*/
-FVector UToolsFunctionLibrary::GetElementColourRGB(FString& ChemicalSymbol)
-{
-	if (ChemicalSymbol == TEXT("H") || ChemicalSymbol == TEXT("H "))
-	{
-		// white
-		return FVector{ 255, 255, 255 };
-	}
-	else if (ChemicalSymbol == TEXT("C") || ChemicalSymbol == TEXT("C "))
-	{
-		// black
-		return FVector{ 0, 0, 0 };
-	}
-	else if (ChemicalSymbol == TEXT("N") || ChemicalSymbol == TEXT("N "))
-	{
-		// blue
-		return FVector{ 143, 143, 255 };
-	}
-	else if (ChemicalSymbol == TEXT("O") || ChemicalSymbol == TEXT("O "))
-	{
-		// red
-		return FVector{ 240, 0, 0 };
-	}
-	else if (ChemicalSymbol == TEXT("P") || ChemicalSymbol == TEXT("P "))
-	{
-		// brownish-yellow
-		return FVector{ 255, 165, 0 };
-	}
-	else if (ChemicalSymbol == TEXT("S") || ChemicalSymbol == TEXT("S "))
-	{
-		// yellow
-		return FVector{ 255, 200, 50 };
-	}
-	else if (ChemicalSymbol == TEXT("Fe"))
-	{
-		// brown
-		return FVector{ 210, 105, 30 };
-	}
-	else if (ChemicalSymbol == TEXT("Zn"))
-	{
-		// silver-gray
-		return FVector{ 100, 100, 100 };
-	}
-	else
-	{
-		// pink
-		return FVector{ 255, 16, 240 };
-	}
-}
-
-/**
- * Returns van der Waals radius of input atom, based on the averages of Tables 1, 2 and 7 in "Van der Waals Radii of Elements" (Batsanov, 2001).
- * @param ChemicalSymbol The atom's chemical symbol
- * @return The van der Waals radius of the atom (in nm)
-*/
-float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol, TMap<FString, float>& VDWRadiiMap)
-{
-	return VDWRadiiMap[ChemicalSymbol];
 }
 
 /**
