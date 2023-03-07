@@ -304,31 +304,46 @@ TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedStri
 }
 
 /**
- * Returns UE vector containing indices of atoms that AtomIndex's atom is connected to
+ * Returns UE Array containing indices of atoms that AtomIndex's atom is connected to.
  * @param LoadedString The PDB file loaded as a UE-type string
  * @param AtomIndex The atom whose connectivity info we need
  * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms (e.g. "HETATM" and "ANISOU" rows, etc.)
  * @return UE vector containing indices of atoms that AtomIndex's atom is connected to
 */
-FVector UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom)
+TArray<int32> UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom)
 {
-	FVector GVE;
+	TArray<int32> GVE;
 	const TCHAR* Delim = TEXT(" ");
 
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
+		FVector ConnectArray;
 
 		if (bOnlyAtom && ScannedStr.Equals(TEXT("CONECT")))
 		{
 			FString CurrentRow = LoadedString.Mid(i, 30);
 			TArray<FString> CulledString;
 			CurrentRow.ParseIntoArray(CulledString, Delim, true);
-			
+
+			int32 ConnectRowLength = CulledString.Num();
+
 			// debugging
-			UE_LOG(LogTemp, Warning, TEXT("CulledString array length: %d"), CulledString.Num());
+			/*UE_LOG(LogTemp, Warning, TEXT("CulledString array length: %d"), CulledString.Num());
+
 			UE_LOG(LogTemp, Warning, TEXT("CulledString[0]: %s"), *CulledString[0]);
-			UE_LOG(LogTemp, Warning, TEXT("CulledString[0] length: %d"), CulledString[0].Len());
+			UE_LOG(LogTemp, Warning, TEXT("CulledString[0] length: %d"), CulledString[0].Len());*/
+
+			FString AtomIndexString = CulledString[0];
+			int32 AtomIndexCurrent = FCString::Atoi(*AtomIndexString);
+
+			if (AtomIndexCurrent == AtomIndex)
+			{
+				for (int32 j = 1; j < ConnectRowLength; j++)
+				{
+					GVE.Add(FCString::Atoi(*CulledString[j]));
+				}
+			}
 		}
 	}
 
