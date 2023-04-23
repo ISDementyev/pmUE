@@ -2,6 +2,11 @@
 
 #include "ToolsFunctionLibrary.h"
 
+TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"), 1.5f}, {TEXT("O"), 1.4f},
+		{TEXT("S"), 1.8f}, {TEXT("P"), 2.08f}, {TEXT("Fe"), 2.0f}, {TEXT("Zn"), 2.1f}, {TEXT("H "), 1.2f},
+	{TEXT("C "), 1.7f}, {TEXT("N "), 1.5f}, {TEXT("O "), 1.4f},
+		{TEXT("S "), 1.8f}, {TEXT("P "), 2.08f} };
+
 int32 SpreadOutFactor{ 75 };
 
 /**
@@ -45,6 +50,7 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
 		}
 	}
 
+	//UE_LOG(LogTemp, Warning, TEXT("NumberOfAtoms: %d"), Counter);
 	return Counter;
 }
 
@@ -57,6 +63,9 @@ int32 UToolsFunctionLibrary::NumberOfAtoms(FString& LoadedString, bool bOnlyAtom
 */
 int32 UToolsFunctionLibrary::NumberOfAtomsSingleElement(FString& LoadedString, FString& CurrentElement, bool bOnlyAtom)
 {
+	// debug
+	UE_LOG(LogTemp, Warning, TEXT("NumberOfAtomsSingleElement is now running."));
+
 	int32 Counter{ 0 };
 
 	for (int32 i = 0; i < LoadedString.Len(); i++)
@@ -99,6 +108,70 @@ TSet<FString> UToolsFunctionLibrary::UniqueElements(FString& LoadedString, bool 
 }
 
 /**
+ * Getter function for a 3-vector corresponding to the input atom's color
+ * @param ChemicalSymbol The atom's chemical symbol, as a string
+ * @return RGB vector corresponding to the colour of the input atom (pink if unknown symbol)
+*/
+FVector UToolsFunctionLibrary::GetElementColourRGB(FString& ChemicalSymbol)
+{
+	if (ChemicalSymbol == TEXT("H") || ChemicalSymbol == TEXT("H "))
+	{
+		// white
+		return FVector{ 255, 255, 255 };
+	}
+	else if (ChemicalSymbol == TEXT("C") || ChemicalSymbol == TEXT("C "))
+	{
+		// black
+		return FVector{ 0, 0, 0 };
+	}
+	else if (ChemicalSymbol == TEXT("N") || ChemicalSymbol == TEXT("N "))
+	{
+		// blue
+		return FVector{ 143, 143, 255 };
+	}
+	else if (ChemicalSymbol == TEXT("O") || ChemicalSymbol == TEXT("O "))
+	{
+		// red
+		return FVector{ 240, 0, 0 };
+	}
+	else if (ChemicalSymbol == TEXT("P") || ChemicalSymbol == TEXT("P "))
+	{
+		// brownish-yellow
+		return FVector{ 255, 165, 0 };
+	}
+	else if (ChemicalSymbol == TEXT("S") || ChemicalSymbol == TEXT("S "))
+	{
+		// yellow
+		return FVector{ 255, 200, 50 };
+	}
+	else if (ChemicalSymbol == TEXT("Fe"))
+	{
+		// brown
+		return FVector{ 210, 105, 30 };
+	}
+	else if (ChemicalSymbol == TEXT("Zn"))
+	{
+		// silver-gray
+		return FVector{ 100, 100, 100 };
+	}
+	else
+	{
+		// pink
+		return FVector{ 255, 16, 240 };
+	}
+}
+
+/**
+ * Returns van der Waals radius of input atom, based on the averages of Tables 1, 2 and 7 in "Van der Waals Radii of Elements" (Batsanov, 2001).
+ * @param ChemicalSymbol The atom's chemical symbol
+ * @return The van der Waals radius of the atom (in nm)
+*/
+float UToolsFunctionLibrary::GetVDWRadius(FString ChemicalSymbol, TMap<FString, float>& VDWRadiiMap)
+{
+	return VDWRadiiMap[ChemicalSymbol];
+}
+
+/**
  * Reads and returns coordinates from PDB
  * @param LoadedString The PDB file loaded as a UE-type string
  * @param Transforms The Coordinate array
@@ -129,7 +202,7 @@ void UToolsFunctionLibrary::GetCoordinates(FString& LoadedString, TArray<FTransf
 }
 
 /**
- * Returns the centroid of the PDB, based on atom positions
+ * Helper function - Returns the centroid of the PDB, based on atom positions
  * @param LoadedString The string contents of the PDB file
  * @param bOnlyAtom
  * @return PDB file's centroid coordinate
@@ -161,6 +234,8 @@ FVector UToolsFunctionLibrary::Centroid(FString& LoadedString, bool bOnlyAtom)
 		}
 	}
 
+	//UE_LOG(LogTemp, Warning, TEXT("Centroid coord: %f, %f, %f"), XC, YC, ZC);
+
 	return FVector(XC, YC, ZC) / Counter;
 }
 
@@ -174,6 +249,9 @@ FVector UToolsFunctionLibrary::Centroid(FString& LoadedString, bool bOnlyAtom)
 void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTransform>& Transforms, 
 	FVector& CentroidCoord, bool bOnlyAtom)
 {
+	// debug
+	UE_LOG(LogTemp, Warning, TEXT("CentroidCorrected is now running"));
+
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
@@ -207,6 +285,11 @@ void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTra
 void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTransform>& Transforms,
 	FVector& CentroidCoord, FString& Element, bool bOnlyAtom)
 {
+	// debug
+	UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration is now running"));
+	UE_LOG(LogTemp, Warning, TEXT("Length of LoadedString: %d"), LoadedString.Len());
+
+	// main code
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
@@ -214,6 +297,9 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
 			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
+			// debug
+			UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Entering first 'if' statement"));
+
 			if (LoadedString.Mid(i + 77, 2).Equals(Element))
 			{
 				// debugging
@@ -272,15 +358,52 @@ void UToolsFunctionLibrary::UpdateCoordinates(FString& LoadedString, FVector& Ce
 }
 
 /**
- * Returns indices of atoms from the PDB file string contents
+ * Returns indices of atoms and their respective coordinates
  * @param LoadedString The PDB file loaded as a UE-type string
+ * @param NumberOfAtoms Number of atoms in the PDB
  * @param bOnlyAtom Boolean that, if true, only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
  * @return Map (dictionary) of atom names and their indices from the pdb - format is (Index: AtomName)
 */
-TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedString, bool bOnlyAtom)
+TMap<int32, FString> UToolsFunctionLibrary::AtomIndexAndCoordMap(FString& LoadedString, int32 NumberOfAtoms, bool bOnlyAtom)
 {
 	int32 Index{ 0 };
-	TMap<int32, FString> AtomNamesAndIndices;
+	TMap<int32, FString> AtomIndicesAndCoords;
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
+			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
+		{			
+			AtomIndicesAndCoords.Add(Index, LoadedString.Mid(i + 30, 24));
+			Index++;
+
+			//debugging
+			//UE_LOG(LogTemp, Warning, TEXT("Adding key, value into IndexAndCoord TMap: (%d, %s)"), Index, *LoadedString.Mid(i + 30, 24));
+		}
+
+		if (Index == NumberOfAtoms)
+		{
+			break;
+		}
+	}
+
+	return AtomIndicesAndCoords;
+}
+
+/**
+ * Returns UE Array containing indices of atoms that AtomIndex's atom is connected to.
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @param ElementName The element
+ * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms (e.g. "HETATM" and "ANISOU" rows, etc.)
+ * @return UE vector containing indices of atoms that AtomIndex's atom is connected to
+*/
+TArray<int32> UToolsFunctionLibrary::ElementIndices(FString& LoadedString, FString ElementName, bool bOnlyAtom)
+{
+	TArray<int32> Indices;
+	//const TCHAR* Delim = TEXT(" ");
+	ElementName = ElementName.Replace(TEXT(" "), TEXT(""), ESearchCase::CaseSensitive);
 
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
@@ -289,63 +412,67 @@ TMap<int32, FString> UToolsFunctionLibrary::AtomNameAndIndex(FString& LoadedStri
 		if ((bOnlyAtom && ScannedStr.Equals(TEXT("ATOM  ")))
 			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
-			// debugging
-			//UE_LOG(LogTemp, Warning, TEXT("Adding atom..."));
-			
-			AtomNamesAndIndices.Add(Index, LoadedString.Mid(i + 13, 2));
-			Index++;
-		}
-	}
-
-	// debugging
-	//UE_LOG(LogTemp, Warning, TEXT("Number of atoms in NameIndex map: %d"), AtomNamesAndIndices.Num());
-
-	return AtomNamesAndIndices;
-}
-
-/**
- * Returns UE Array containing indices of atoms that AtomIndex's atom is connected to.
- * @param LoadedString The PDB file loaded as a UE-type string
- * @param AtomIndex The atom whose connectivity info we need
- * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms (e.g. "HETATM" and "ANISOU" rows, etc.)
- * @return UE vector containing indices of atoms that AtomIndex's atom is connected to
-*/
-TArray<int32> UToolsFunctionLibrary::GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom)
-{
-	TArray<int32> GVE;
-	const TCHAR* Delim = TEXT(" ");
-
-	for (int32 i = 0; i < LoadedString.Len(); i++)
-	{
-		FString ScannedStr = LoadedString.Mid(i, 6);
-		FVector ConnectArray;
-
-		if (bOnlyAtom && ScannedStr.Equals(TEXT("CONECT")))
-		{
 			FString CurrentRow = LoadedString.Mid(i, 30);
-			TArray<FString> CulledString;
-			CurrentRow.ParseIntoArray(CulledString, Delim, true);
 
-			int32 ConnectRowLength = CulledString.Num();
+			FString ElementCurrent = LoadedString.Mid(i + 77, 2);
+			ElementCurrent = ElementCurrent.Replace(TEXT(" "), TEXT(""), ESearchCase::CaseSensitive);
 
-			// debugging
-			/*UE_LOG(LogTemp, Warning, TEXT("CulledString array length: %d"), CulledString.Num());
-
-			UE_LOG(LogTemp, Warning, TEXT("CulledString[0]: %s"), *CulledString[0]);
-			UE_LOG(LogTemp, Warning, TEXT("CulledString[0] length: %d"), CulledString[0].Len());*/
-
-			FString AtomIndexString = CulledString[0];
-			int32 AtomIndexCurrent = FCString::Atoi(*AtomIndexString);
-
-			if (AtomIndexCurrent == AtomIndex)
+			if (ElementCurrent.Equals(ElementName))
 			{
-				for (int32 j = 1; j < ConnectRowLength; j++)
-				{
-					GVE.Add(FCString::Atoi(*CulledString[j]));
-				}
+				int32 AtomSerial = FCString::Atoi(*LoadedString.Mid(i + 6, 4));
+				Indices.Add(AtomSerial);
 			}
 		}
 	}
 
-	return GVE;
+	return Indices;
+}
+
+/**
+ * Helper function, retrieves bond info for atoms (reads all conect lines regardless of HETATM status)
+ * @param LoadedString The PDB file loaded as a UE-type string
+ * @return An Unreal string that contains the conect info.
+*/
+FString UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
+{
+	FString ConectInfoStr;
+
+	for (int32 i = 0; i < LoadedString.Len(); i++)
+	{
+		FString ScannedStr = LoadedString.Mid(i, 6);
+
+		if (ScannedStr.Equals(TEXT("CONECT")))
+		{
+			ConectInfoStr = LoadedString.Mid(i);
+			break;
+		}
+	}
+
+	return ConectInfoStr;
+}
+
+/**
+ * Generates single bonds
+ * @param ConectString The PDB file CONECT data loaded as a UE-type string
+ * @param AtomIndexCoordMap A map (dictionary) containing atom indices (keys) and their coordinates as a string (value) - Found from AtomIndexAndCoordMap
+ * @return An Unreal string that contains the conect info.
+*/
+void UToolsFunctionLibrary::GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap)
+{
+	// debug
+	UE_LOG(LogTemp, Warning, TEXT("GenBondSingle is now running"));
+	const TCHAR* Delim = TEXT("");
+
+	for (int32 i = 0; i < ConectString.Len(); i++)
+	{
+		FString ScannedStr = ConectString.Mid(i, 6);
+
+		if (ScannedStr.Equals(TEXT("CONECT")))
+		{
+			FString ConectRow = ConectString.Mid(i, 30);
+			TArray<FString> ConectAtoms;
+
+			ConectRow.ParseIntoArray(ConectAtoms, Delim, true);
+		}
+	}
 }
