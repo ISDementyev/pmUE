@@ -77,7 +77,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/**
-		 * Returns the centroid of the PDB, based on atom positions
+		 * Helper function - Returns the centroid of the PDB, based on atom positions
 		 * @param LoadedString The string contents of the PDB file
 		 * @param bOnlyAtom
 		 * @return PDB file's centroid coordinate
@@ -109,10 +109,11 @@ public:
 		/**
 		 * Returns indices of atoms from the PDB file string contents
 		 * @param LoadedString The PDB file loaded as a UE-type string
+		 * @param NumberOfAtoms Number of atoms in the PDB 
 		 * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms ("HETATM" rows)
 		 * @return Map (dictionary) of atom names and their indices from the pdb - format is (Index: AtomName)
 		*/
-		static TMap<int32, FString> AtomNameAndIndex(FString& LoadedString, bool bOnlyAtom = true);
+		static TMap<int32, FString> AtomIndexAndCoordMap(FString& LoadedString, int32 NumberOfAtoms, bool bOnlyAtom = true);
 
 	UFUNCTION(BlueprintCallable)
 		/**
@@ -126,11 +127,28 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		/**
-		 * Returns UE Array containing indices of atoms that AtomIndex's atom is connected to
+		 * Returns UE Array containing indices of elements
 		 * @param LoadedString The PDB file loaded as a UE-type string
-		 * @param AtomIndex The atom whose connectivity info we need
+		 * @param AtomName Name of the info whose connectivity info we need
 		 * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards heteroatoms (e.g. "HETATM" and "ANISOU" rows, etc.)
 		 * @return UE vector containing indices of atoms that AtomIndex's atom is connected to
 		*/
-		static TArray<int32> GVE(FString& LoadedString, int32 AtomIndex, bool bOnlyAtom = true);
+		static TArray<int32> ElementIndices(FString& LoadedString, FString ElementName, bool bOnlyAtom = true);
+
+	UFUNCTION(BlueprintCallable)
+		/**
+		 * Helper function, retrieves bond info for atoms (reads all conect lines regardless of HETATM status)
+		 * @param LoadedString The PDB file loaded as a UE-type string
+		 * @return An Unreal string that contains the conect info.
+		*/
+		static FString ConectInfo(FString& LoadedString);
+
+	UFUNCTION(BlueprintCallable)
+		/**
+		 * Generates single bonds
+		 * @param ConectString The PDB file CONECT data loaded as a UE-type string
+		 * @param AtomIndexCoordMap A map (dictionary) containing atom indices (keys) and their coordinates as a string (value) - Found from AtomIndexAndCoordMap
+		 * @return An Unreal string that contains the conect info.
+		*/
+		static void GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap);
 };
