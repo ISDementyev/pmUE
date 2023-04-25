@@ -2,10 +2,6 @@
 
 #include "ToolsFunctionLibrary.h"
 
-TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"), 1.5f}, {TEXT("O"), 1.4f},
-		{TEXT("S"), 1.8f}, {TEXT("P"), 2.08f}, {TEXT("Fe"), 2.0f}, {TEXT("Zn"), 2.1f}, {TEXT("H "), 1.2f},
-	{TEXT("C "), 1.7f}, {TEXT("N "), 1.5f}, {TEXT("O "), 1.4f},
-		{TEXT("S "), 1.8f}, {TEXT("P "), 2.08f} };
 
 int32 SpreadOutFactor{ 75 };
 
@@ -278,7 +274,7 @@ void UToolsFunctionLibrary::CentroidCorrected(FString& LoadedString, TArray<FTra
  * Centroid-Corrected Element-Specific Atom Spawner: Reads and returns centroid-corrected coordinates from PDB
  * @param LoadedString The PDB file loaded as a UE-type string
  * @param Transforms The coordinate array
- * @param CentroidCoord Centroid of the pdb file, can be calculated using UToolsFunctionLibrary::Centroid
+ * @param CentroidCoord Centroid of the pdb file, calculated using UToolsFunctionLibrary::Centroid
  * @param Element The atom's element 
  * @param bOnlyAtom Boolean that, if true (by default), only scans "ATOM" rows and disregards others (e.g. "HETATM" and "ANISOU" rows, etc.)
 */
@@ -455,9 +451,10 @@ FString UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
  * Generates single bonds
  * @param ConectString The PDB file CONECT data loaded as a UE-type string
  * @param AtomIndexCoordMap A map (dictionary) containing atom indices (keys) and their coordinates as a string (value) - Found from AtomIndexAndCoordMap
+ * @param CentroidCoord Centroid of the pdb file, calculated using UToolsFunctionLibrary::Centroid
  * @return An Unreal string that contains the conect info.
 */
-void UToolsFunctionLibrary::GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap)
+void UToolsFunctionLibrary::GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap, FVector& CentroidCoord)
 {
 	// debug
 	UE_LOG(LogTemp, Warning, TEXT("GenBondSingle is now running"));
@@ -469,10 +466,39 @@ void UToolsFunctionLibrary::GenBondSingle(FString& ConectString, TMap<int32, FSt
 
 		if (ScannedStr.Equals(TEXT("CONECT")))
 		{
+			// Parse CONECT row into easy-to-handle array
 			FString ConectRow = ConectString.Mid(i, 30);
 			TArray<FString> ConectAtoms;
-
 			ConectRow.ParseIntoArray(ConectAtoms, Delim, true);
+
+			// finding index of first atom in CONECT row
+			int32 FocusedAtom = FCString::Atoi(*ConectAtoms[1]);
+
+			// finding coordinates of first atom in CONECT row 
+			FString FocusedAtomCoordString = AtomIndexCoordMap[FocusedAtom];
+			TArray<FString> FocusedAtomCoords;
+			FocusedAtomCoordString.ParseIntoArray(FocusedAtomCoords, Delim, true);
+
+			FVector FACNumerical = FVector(FCString::Atof(*FocusedAtomCoords[0]), 
+				FCString::Atof(*FocusedAtomCoords[1]), FCString::Atof(*FocusedAtomCoords[2]));
+
+			// iterating through the rest of the atoms in the same row
+			for (int32 j = 2; j < ConectAtoms.Num(); j++)
+			{
+				// finding index of next bonded atom in the same CONECT row
+				int32 CurrentBondedAtom = FCString::Atoi(*ConectAtoms[j]);
+				FString CBACoordString = AtomIndexCoordMap[CurrentBondedAtom];
+				TArray<FString> CBACoords;
+				CBACoordString.ParseIntoArray(CBACoords, Delim, true);
+
+				FVector CBANumerical = FVector(FCString::Atof(*CBACoords[0]),
+					FCString::Atof(*CBACoords[1]), FCString::Atof(*CBACoords[2]));
+
+				FVector BisectPoint = (FACNumerical + CBANumerical) / 2 - CentroidCoord;
+
+				// spawn single bond @ BisectPoint
+
+			}
 		}
 	}
 }
