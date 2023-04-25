@@ -461,7 +461,7 @@ void UToolsFunctionLibrary::GenBondSingle(FString& ConectString, TMap<int32, FSt
 {
 	// debug
 	UE_LOG(LogTemp, Warning, TEXT("GenBondSingle is now running"));
-	const TCHAR* Delim = TEXT("");
+	const TCHAR* Delim = TEXT(" ");
 
 	for (int32 i = 0; i < ConectString.Len(); i++)
 	{
