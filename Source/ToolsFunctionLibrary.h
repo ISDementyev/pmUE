@@ -148,7 +148,9 @@ public:
 		 * Generates single bonds
 		 * @param ConectString The PDB file CONECT data loaded as a UE-type string
 		 * @param AtomIndexCoordMap A map (dictionary) containing atom indices (keys) and their coordinates as a string (value) - Found from AtomIndexAndCoordMap
+		 * @param CentroidCoord Centroid of the pdb file, calculated using UToolsFunctionLibrary::Centroid
 		 * @return An Unreal string that contains the conect info.
 		*/
-		static void GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap);
+		static void GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap, FVector& CentroidCoord);
+};
 };
