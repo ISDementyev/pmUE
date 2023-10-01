@@ -141,7 +141,7 @@ public:
 		 * @param LoadedString The PDB file loaded as a UE-type string
 		 * @return An Unreal string that contains the conect info.
 		*/
-		static FString ConectInfo(FString& LoadedString);
+		static TMap<FString, FString> ConectInfo(FString& LoadedString);
 
 	UFUNCTION(BlueprintCallable)
 		/**
@@ -152,5 +152,4 @@ public:
 		 * @return An Unreal string that contains the conect info.
 		*/
 		static void GenBondSingle(FString& ConectString, TMap<int32, FString>& AtomIndexCoordMap, FVector& CentroidCoord);
-};
 };
