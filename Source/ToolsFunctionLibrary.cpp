@@ -1,7 +1,12 @@
 // See GPL-v3.0 LICENSE in GitHub repo.
 
+
 #include "ToolsFunctionLibrary.h"
 
+TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"), 1.5f}, {TEXT("O"), 1.4f},
+		{TEXT("S"), 1.8f}, {TEXT("P"), 2.08f}, {TEXT("Fe"), 2.0f}, {TEXT("Zn"), 2.1f}, {TEXT("H "), 1.2f},
+	{TEXT("C "), 1.7f}, {TEXT("N "), 1.5f}, {TEXT("O "), 1.4f},
+		{TEXT("S "), 1.8f}, {TEXT("P "), 2.08f} };
 
 int32 SpreadOutFactor{ 75 };
 
@@ -429,22 +434,71 @@ TArray<int32> UToolsFunctionLibrary::ElementIndices(FString& LoadedString, FStri
  * @param LoadedString The PDB file loaded as a UE-type string
  * @return An Unreal string that contains the conect info.
 */
-FString UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
+TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 {
 	FString ConectInfoStr;
+	TArray<FString> ConectArr;
+	TMap<FString, FString> ConectMap;
+	const TCHAR* Delim = TEXT(" ");
 
+	// returns the raw CONECT data as one big str
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
 		FString ScannedStr = LoadedString.Mid(i, 6);
+		//UE_LOG(LogTemp, Warning, TEXT("ScannedStr: (%s)"), *ScannedStr);
 
 		if (ScannedStr.Equals(TEXT("CONECT")))
 		{
 			ConectInfoStr = LoadedString.Mid(i);
+			//ConectInfoStr = ConectInfoStr.Replace(TEXT("CONECT"), TEXT(""));
 			break;
 		}
 	}
 
-	return ConectInfoStr;
+	ConectInfoStr.ParseIntoArrayLines(ConectArr, true);
+	TArray<FString> ConectArrClean; // set up clean arr
+
+	// removes non-CONECT lines from the array by making a new one (ConectArrClean)
+	for (int32 i = 0; i < ConectArr.Num(); i++)
+	{
+		FString CurrentRow = ConectArr[i];
+		if (CurrentRow.Contains(TEXT("CONECT")))
+		{
+			ConectArrClean.Add(CurrentRow.Mid(6));
+		}
+	}
+
+	//debugging
+	//UE_LOG(LogTemp, Warning, TEXT("ConectArrClean[0]: (%s)"), *ConectArrClean[0]);
+	//UE_LOG(LogTemp, Warning, TEXT("CONECTINFOSTR: (%s)"), *ConectInfoStr);
+
+	// actually generates the TMap return variable
+	for (int32 j = 0; j < ConectArrClean.Num(); j++)
+	{
+		TArray<FString> ConectRow; // contains something like: 1    2     3     7
+		ConectArrClean[j].ParseIntoArray(ConectRow, Delim);
+		FString Value = ""; // corresponds to CONECT row after first atom number
+
+		for (int32 k = 1; k < ConectRow.Num(); k++)
+		{
+			Value.Append(ConectRow[k].Append(TEXT(","))); // create value string containing all atoms bonded, separated by , delim
+		}
+
+		// debugging
+		//UE_LOG(LogTemp, Warning, TEXT("ConectRow[0], Value: (%s, %s)"), *ConectRow[0], *Value);
+		ConectMap.Add(ConectRow[0], Value);
+	}
+
+	// debugging
+	//UE_LOG(LogTemp, Warning, TEXT("ConectMap length: (%d)"), ConectMap.Num());
+
+	//debugging
+	/*for (const TPair<FString, FString>& pair : ConectMap)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ConectMap key, value: %s, %s"), *pair.Key, *pair.Value);
+	}*/
+
+	return ConectMap;
 }
 
 /**
