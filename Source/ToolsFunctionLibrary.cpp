@@ -498,6 +498,16 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 		UE_LOG(LogTemp, Warning, TEXT("ConectMap key, value: %s, %s"), *pair.Key, *pair.Value);
 	}*/
 
+	TSet<FString> AlreadyAdded; // maintains a list of all atom indices checked so far
+
+	for (const TPair<FString, FString>& pair : ConectMap)
+	{
+		if (!AlreadyAdded.Contains(pair.Key))
+		{
+			AlreadyAdded.Add(pair.Key)
+		}
+	}
+	
 	return ConectMap;
 }
 
