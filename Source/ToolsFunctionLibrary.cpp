@@ -498,15 +498,41 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 		UE_LOG(LogTemp, Warning, TEXT("ConectMap key, value: %s, %s"), *pair.Key, *pair.Value);
 	}*/
 
-	TSet<FString> AlreadyAdded; // maintains a list of all atom indices checked so far
-
+	TSet<TCHAR> KeepTrack; // Keeps track of atoms iterated through so far.
+	TMap<FString, FString> FinalMap; // The final, cleaned map.
 	for (const TPair<FString, FString>& pair : ConectMap)
 	{
-		if (!AlreadyAdded.Contains(pair.Key))
+		FString NewConectRow; // To store the cleaned (copy-removed) row
+		FString CurrentConectRow = pair.Value;
+		FString Key = pair.Key;
+		KeepTrack.Add(","[0]);
+
+		for (int32 m = 0; m < CurrentConectRow.Len(); m++)
 		{
-			AlreadyAdded.Add(pair.Key)
+			TCHAR Char = CurrentConectRow[m];
+			//UE_LOG(LogTemp, Warning, TEXT("Char: %c"), *Char);
+
+			if (!KeepTrack.Contains(Key[0]))
+			{
+				KeepTrack.Add(Key[0]);
+			}
+
+			if (!KeepTrack.Contains(Char))
+			{
+				KeepTrack.Add(Char);
+				NewConectRow.AppendChar(Char);
+				NewConectRow.AppendChar(*TEXT(","));
+			}
 		}
-	}
+
+		if (NewConectRow.Len() > 0)
+		{
+			FinalMap.Add(pair.Key, NewConectRow);
+			
+			//debugging
+			//UE_LOG(LogTemp, Warning, TEXT("FinalMap key, value: %s, %s"), *pair.Key, *NewConectRow);
+		}		
+	}	
 	
 	return ConectMap;
 }
