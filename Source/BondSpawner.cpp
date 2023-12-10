@@ -73,8 +73,7 @@ void ABondSpawner::BeginPlay()
 			FMatrix I4 = FMatrix::Identity;
 			FMatrix I3 = I4.RemoveTranslation();
 		}
-	}
-	
+	}	
 }
 
 // Called every frame
