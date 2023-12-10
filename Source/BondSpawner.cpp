@@ -55,6 +55,23 @@ void ABondSpawner::BeginPlay()
 				FCString::Atoi(*ValueAtomCoordinates[1]), FCString::Atoi(*ValueAtomCoordinates[2])) - CentroidCoordinate;
 
 			FVector BisectPoint = (KeyAtomCoordinatesVector + ValueAtomCoordinatesVector) / 2 - CentroidCoordinate; // where the bond will spawn
+
+			// Choose the value atom as the position that the top of the bond will align to, and subtract to align to center
+			FVector VACVAlign = ValueAtomCoordinatesVector - BisectPoint;
+			FVector VACVAlignN = VACVAlign.GetSafeNormal();
+
+			// Normal vector corresponding to the top of the bond cylinder, bond centered @ origin
+			FVector StartingVectorN = FVector(0, 0, 50).GetSafeNormal();
+
+			// Rotation axis between the two vectors - used to determine rotation direction
+			FVector Axis = FVector::CrossProduct(VACVAlignN, StartingVectorN);
+
+			// Angle between the 2 vectors - for determining magnitude of rotation
+			double Angle = FMath::Acos(FVector::DotProduct(VACVAlignN, StartingVectorN));
+
+			// Find rotation matrix to align StartingVector to VACVAlign - Using Rodrigues rotation method
+			FMatrix I4 = FMatrix::Identity;
+			FMatrix I3 = I4.RemoveTranslation();
 		}
 	}
 	
