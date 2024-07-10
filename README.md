@@ -1,6 +1,10 @@
 # pmUE
 pmUE (Protein Modelling Unreal Engine) - a repo for constructing a molecule visualizer plugin in Unreal
 
+### Most Recent Update
+Currently in the process of finishing up my thesis, so development will pick up later this year.
+In the meantime, feel free to contribute as always.
+
 ### Current abilities
 The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively. Appropriate bonds and bond lengths must still be implemented.
 
