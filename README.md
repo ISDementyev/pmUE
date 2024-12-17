@@ -8,8 +8,9 @@ In the meantime, feel free to contribute as always.
 ### Current abilities
 The current capabilities are shown below for Methane.pdb and AceticAcid.pdb respectively. Appropriate bonds and bond lengths must still be implemented.
 
-![Methane](/Screenshots/MethaneProperRadii.png "Spawned methane with color and proper radii")
-![Acetic acid](/Screenshots/AceticAcidProperRadii.png "Spawned acetic acid with color and proper radii")
+![Methane](/Screenshots/MethaneProperRadii.png "Spawned methane")
+![Acetic acid](/Screenshots/AceticAcidProperRadii.png "Spawned acetic acid")
+![6A5J IKK Peptide](/Screenshots/6A5JSmallIKK.png "Spawned IKK peptide from 6A5J, smaller HUD for future edits")
 
 ### Main Ideas
 1. Unreal Engine 4 (mainly in C++) used alongside Visual Studio 2019 for the majority of the work, with Doxygen-style commenting (html file will be added in a docs folder)
