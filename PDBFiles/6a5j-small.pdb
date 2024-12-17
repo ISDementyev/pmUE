@@ -1,0 +1,55 @@
+CRYST1    1.000    1.000    1.000  90.00  90.00  90.00 P 1           1
+ATOM      1  N   ILE A   1      -9.977   5.084  -0.804  1.00  1.36           N  
+ATOM      2  CA  ILE A   1      -9.428   4.240   0.289  1.00  0.28           C  
+ATOM      3  C   ILE A   1      -8.601   3.087  -0.269  1.00  0.30           C  
+ATOM      4  O   ILE A   1      -9.134   2.180  -0.908  1.00  0.55           O  
+ATOM      5  CB  ILE A   1     -10.556   3.667   1.171  1.00  1.48           C  
+ATOM      6  CG1 ILE A   1     -11.395   4.802   1.763  1.00  1.64           C  
+ATOM      7  CG2 ILE A   1      -9.976   2.794   2.275  1.00  2.51           C  
+ATOM      8  CD1 ILE A   1     -12.629   4.323   2.501  1.00  2.53           C  
+ATOM      9  N   LYS A   2      -7.295   3.130  -0.024  1.00  0.08           N  
+ATOM     10  CA  LYS A   2      -6.396   2.084  -0.500  1.00  0.07           C  
+ATOM     11  C   LYS A   2      -6.593   0.793   0.291  1.00  0.08           C  
+ATOM     12  O   LYS A   2      -6.656   0.809   1.521  1.00  0.09           O  
+ATOM     13  CB  LYS A   2      -4.934   2.531  -0.384  1.00  0.08           C  
+ATOM     14  CG  LYS A   2      -4.546   3.653  -1.334  1.00  0.11           C  
+ATOM     15  CD  LYS A   2      -3.114   4.126  -1.099  1.00  0.12           C  
+ATOM     16  CE  LYS A   2      -3.033   5.105   0.061  1.00  0.62           C  
+ATOM     17  NZ  LYS A   2      -3.301   4.453   1.372  1.00  1.15           N1+
+ATOM     18  N   LYS A   3      -6.696  -0.321  -0.425  1.00  0.08           N  
+ATOM     19  CA  LYS A   3      -6.860  -1.624   0.202  1.00  0.09           C  
+ATOM     20  C   LYS A   3      -5.509  -2.314   0.235  1.00  0.06           C  
+ATOM     21  O   LYS A   3      -4.908  -2.488   1.295  1.00  0.07           O  
+ATOM     22  CB  LYS A   3      -7.873  -2.472  -0.569  1.00  0.12           C  
+ATOM     23  CG  LYS A   3      -9.251  -1.834  -0.670  1.00  0.17           C  
+ATOM     24  CD  LYS A   3     -10.209  -2.691  -1.483  1.00  0.70           C  
+ATOM     25  CE  LYS A   3     -10.542  -3.992  -0.768  1.00  1.36           C  
+ATOM     26  NZ  LYS A   3     -11.182  -3.752   0.555  1.00  2.00           N1+
+TER   
+CONECT    1    2
+CONECT    2    1    3    5
+CONECT    3    2    4    4    9
+CONECT    4    3    3
+CONECT    5    2    6    7
+CONECT    6    5    8
+CONECT    7    5
+CONECT    8    6
+CONECT    9    3   10
+CONECT   10    9   11   13
+CONECT   11   10   12   12   18
+CONECT   12   11   11
+CONECT   13   10   14
+CONECT   14   13   15
+CONECT   15   14   16
+CONECT   16   15   17
+CONECT   17   16
+CONECT   18   11   19
+CONECT   19   18   20   22
+CONECT   20   19   21   21
+CONECT   21   20   20
+CONECT   22   19   23
+CONECT   23   22   24
+CONECT   24   23   25
+CONECT   25   24   26
+CONECT   26   25
+END
