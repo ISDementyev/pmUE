@@ -2,13 +2,15 @@
 
 
 #include "ToolsFunctionLibrary.h"
+#include "FileData.h"
 
 TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"), 1.5f}, {TEXT("O"), 1.4f},
 		{TEXT("S"), 1.8f}, {TEXT("P"), 2.08f}, {TEXT("Fe"), 2.0f}, {TEXT("Zn"), 2.1f}, {TEXT("H "), 1.2f},
 	{TEXT("C "), 1.7f}, {TEXT("N "), 1.5f}, {TEXT("O "), 1.4f},
 		{TEXT("S "), 1.8f}, {TEXT("P "), 2.08f} };
 
-int32 SpreadOutFactor{ 75 };
+FileData FD;
+int32 SpreadOutFactor = FD.SpreadOutFactor;
 
 /**
  * Converts file content into string
@@ -287,9 +289,25 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 	FVector& CentroidCoord, FString& Element, bool bOnlyAtom)
 {
 	// debug
-	UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration is now running"));
-	UE_LOG(LogTemp, Warning, TEXT("Length of LoadedString: %d"), LoadedString.Len());
+	//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration is now running"));
+	//UE_LOG(LogTemp, Warning, TEXT("Length of LoadedString: %d"), LoadedString.Len());
+	
+	TCHAR ElementNoWS = Element[0];
+	//UE_LOG(LogTemp, Warning, TEXT("TCHAR ElementNoWS: %c"), ElementNoWS);
 
+	// remove whitespaces; check if the element is one or two-lettered
+	// this should automatically Element to a usable var for checks, use TrimmedElement for everything else
+	FString TrimmedElement = Element.TrimEnd();
+	bool bOneLetter = false;
+
+	// In this case, if the input (FString& Element) had a ws, 
+	// then TrimmedElement does not, indicating one-letter element name
+	if (TrimmedElement != Element)
+	{
+		bOneLetter = true;
+	}
+
+	
 	// main code
 	for (int32 i = 0; i < LoadedString.Len(); i++)
 	{
@@ -299,24 +317,56 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 			|| (!bOnlyAtom && (ScannedStr.Equals(TEXT("ATOM  ")) || ScannedStr.Equals(TEXT("HETATM")))))
 		{
 			// debug
-			UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Entering first 'if' statement"));
-
-			if (LoadedString.Mid(i + 77, 2).Equals(Element))
+			//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Entering first 'if' statement"));
+			
+			FString CheckElementStr = LoadedString.Mid(i + 77, 2);
+			if (bOneLetter)
 			{
-				// debugging
-				UE_LOG(LogTemp, Warning, TEXT("Beginning to spawn %s atom"), *Element);
+				TCHAR CheckElementStrChar = CheckElementStr[0];
 
-				// extract coordinates
-				float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-				float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-				float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+				if (CheckElementStrChar == ElementNoWS)
+				{
+					// debugging
+					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Beginning to spawn %s atom"), *Element);
 
-				// add coordinates to array list
-				Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
+					// extract coordinates
+					float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+					float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+					float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
 
-				// debugging
-				UE_LOG(LogTemp, Warning, TEXT("Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
+					// add coordinates to array list
+					Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
+
+					// debugging
+					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
+				}
 			}
+			else
+			{
+				if (CheckElementStr.Equals(TrimmedElement))
+				{
+					// debugging
+					//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Beginning to spawn %s atom"), *Element);
+
+					// extract coordinates
+					float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
+					float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
+					float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+
+					// add coordinates to array list
+					Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
+
+					// debugging
+					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
+				}
+			}
+			//FString CheckElementStr = LoadedString.Mid(i + 77, 2);
+			//TCHAR ElemChar = CheckElementStr[0];
+			//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Actual Element str captured: %s"), *CheckElementStr);
+
+			//if (ElemChar == ElementNoWS)
+			//if (CheckElementStr.Equals(Element))
+			
 		}
 	}
 }
@@ -533,8 +583,8 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 			//UE_LOG(LogTemp, Warning, TEXT("FinalMap key, value: %s, %s"), *pair.Key, *NewConectRow);
 		}		
 	}	
-	
-	return ConectMap;
+
+	return FinalMap;
 }
 
 /**
