@@ -35,14 +35,15 @@ void ASulfurSpawner::BeginPlay()
 	FileData FD;
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
+	bool AtomOnly = FD.AtomOnly;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "S " };
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, false);
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, AtomOnly);
 	TransformsSulfur.Empty(NumberOfAtoms);
 
 	// generates data array of atoms to be spawned
-	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsSulfur, CentroidCoordinate, CurrentElement, false);
+	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsSulfur, CentroidCoordinate, CurrentElement, AtomOnly);
 
 	// spawns the actual static mesh
 	InstancedStaticMeshComponentSulfur->AddInstances(TransformsSulfur, true);

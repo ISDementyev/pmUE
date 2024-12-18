@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	ACarbonSpawner();
 
+	virtual void OnConstruction(const FTransform& Transform) override;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,8 +25,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(Transient)
-		TArray<FTransform> Transforms;
+	UPROPERTY(VisibleAnywhere)
+		TArray<FTransform> TransformsCarbon;
 
 private:
 	UPROPERTY(VisibleAnywhere)

@@ -1,3 +1,5 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
 #pragma once
 
 #include "CoreMinimal.h"
@@ -21,4 +23,5 @@ public:
 	TMap<int32, FString> IndexAndCoord = UToolsFunctionLibrary::AtomIndexAndCoordMap(PDBContent, NAtoms, AtomOnly);
 	TMap<FString, FString> BondInfo = UToolsFunctionLibrary::ConectInfo(PDBContent);
 	int32 SpreadOutFactor{ 1 };
+	bool bDebug{ false };
 };

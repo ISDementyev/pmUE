@@ -35,14 +35,15 @@ void ANitrogenSpawner::BeginPlay()
 	FileData FD;
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
+	bool AtomOnly = FD.AtomOnly;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "N " };
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, false);
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, AtomOnly);
 	TransformsNitrogen.Empty(NumberOfAtoms);
 
 	// generates data array of atoms to be spawned
-	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsNitrogen, CentroidCoordinate, CurrentElement, false);
+	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsNitrogen, CentroidCoordinate, CurrentElement, AtomOnly);
 
 	// spawns the actual static mesh
 	InstancedStaticMeshComponentNitrogen->AddInstances(TransformsNitrogen, true);
@@ -54,4 +55,3 @@ void ANitrogenSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-

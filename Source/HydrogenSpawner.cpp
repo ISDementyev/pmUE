@@ -1,3 +1,6 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
 #include "HydrogenSpawner.h"
 #include "ToolsFunctionLibrary.h"
 #include "FileData.h"
@@ -35,18 +38,22 @@ void AHydrogenSpawner::BeginPlay()
 	FileData FD;
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
+	bool AtomOnly = FD.AtomOnly;
+	TMap<FString, FString> BondInfo = FD.BondInfo;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "H " };
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, false);
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, AtomOnly);
 	TransformsHydrogen.Empty(NumberOfAtoms);
 
 	// generates data array of atoms to be spawned
-	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsHydrogen, CentroidCoordinate, CurrentElement, false);
+	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsHydrogen, CentroidCoordinate, CurrentElement, AtomOnly);
 
 	// spawns the actual static mesh
 	InstancedStaticMeshComponentHydrogen->AddInstances(TransformsHydrogen, true);
-	
+
+	// debugging
+	//UToolsFunctionLibrary::ConectInfo(PDBContent);
 }
 
 // Called every frame

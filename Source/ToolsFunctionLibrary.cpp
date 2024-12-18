@@ -1,4 +1,4 @@
-// See GPL-v3.0 LICENSE in GitHub repo.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 
 #include "ToolsFunctionLibrary.h"
@@ -11,6 +11,7 @@ TMap<FString, float> VDWRadii{ {TEXT("H"), 1.2f}, {TEXT("C"), 1.7f}, {TEXT("N"),
 
 FileData FD;
 int32 SpreadOutFactor = FD.SpreadOutFactor;
+bool bDebug = FD.bDebug;
 
 /**
  * Converts file content into string
@@ -327,18 +328,18 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 				if (CheckElementStrChar == ElementNoWS)
 				{
 					// debugging
-					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Beginning to spawn %s atom"), *Element);
+					//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Beginning to spawn %s atom"), *Element);
 
 					// extract coordinates
-					float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-					float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-					float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+					float X = FCString::Atof(*LoadedString.Mid(i + 31, 7));
+					float Y = FCString::Atof(*LoadedString.Mid(i + 39, 7));
+					float Z = FCString::Atof(*LoadedString.Mid(i + 47, 7));
 
 					// add coordinates to array list
 					Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
 
 					// debugging
-					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
+					//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
 				}
 			}
 			else
@@ -349,24 +350,17 @@ void UToolsFunctionLibrary::CCESAtomGeneration(FString& LoadedString, TArray<FTr
 					//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Beginning to spawn %s atom"), *Element);
 
 					// extract coordinates
-					float X = FCString::Atof(*LoadedString.Mid(i + 32, 6));
-					float Y = FCString::Atof(*LoadedString.Mid(i + 40, 6));
-					float Z = FCString::Atof(*LoadedString.Mid(i + 48, 6));
+					float X = FCString::Atof(*LoadedString.Mid(i + 31, 7));
+					float Y = FCString::Atof(*LoadedString.Mid(i + 39, 7));
+					float Z = FCString::Atof(*LoadedString.Mid(i + 47, 7));
 
 					// add coordinates to array list
 					Transforms.Add(FTransform((FVector(X, Y, Z) - CentroidCoord) * SpreadOutFactor));
 
 					// debugging
-					UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
+					//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Spawning %s atom @ (%f, %f, %f)"), *Element, X * SpreadOutFactor, Y * SpreadOutFactor, Z * SpreadOutFactor);
 				}
 			}
-			//FString CheckElementStr = LoadedString.Mid(i + 77, 2);
-			//TCHAR ElemChar = CheckElementStr[0];
-			//UE_LOG(LogTemp, Warning, TEXT("CCESAtomGeneration: Actual Element str captured: %s"), *CheckElementStr);
-
-			//if (ElemChar == ElementNoWS)
-			//if (CheckElementStr.Equals(Element))
-			
 		}
 	}
 }
@@ -490,6 +484,7 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 	TArray<FString> ConectArr;
 	TMap<FString, FString> ConectMap;
 	const TCHAR* Delim = TEXT(" ");
+	const TCHAR* DelimComma = TEXT(",");
 
 	// returns the raw CONECT data as one big str
 	for (int32 i = 0; i < LoadedString.Len(); i++)
@@ -518,10 +513,6 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 		}
 	}
 
-	//debugging
-	//UE_LOG(LogTemp, Warning, TEXT("ConectArrClean[0]: (%s)"), *ConectArrClean[0]);
-	//UE_LOG(LogTemp, Warning, TEXT("CONECTINFOSTR: (%s)"), *ConectInfoStr);
-
 	// actually generates the TMap return variable
 	for (int32 j = 0; j < ConectArrClean.Num(); j++)
 	{
@@ -535,42 +526,35 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 		}
 
 		// debugging
-		//UE_LOG(LogTemp, Warning, TEXT("ConectRow[0], Value: (%s, %s)"), *ConectRow[0], *Value);
+		//UE_LOG(LogTemp, Warning, TEXT("ToolsFunctionLibrary: ConectInfo: ConectRow[0], Value: (%s, %s)"), *ConectRow[0], *Value);
 		ConectMap.Add(ConectRow[0], Value);
 	}
 
-	// debugging
-	//UE_LOG(LogTemp, Warning, TEXT("ConectMap length: (%d)"), ConectMap.Num());
-
-	//debugging
-	/*for (const TPair<FString, FString>& pair : ConectMap)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ConectMap key, value: %s, %s"), *pair.Key, *pair.Value);
-	}*/
-
-	TSet<TCHAR> KeepTrack; // Keeps track of atoms iterated through so far.
+	TSet<FString> KeepTrack; // Keeps track of atoms iterated through so far.
 	TMap<FString, FString> FinalMap; // The final, cleaned map.
 	for (const TPair<FString, FString>& pair : ConectMap)
 	{
 		FString NewConectRow; // To store the cleaned (copy-removed) row
 		FString CurrentConectRow = pair.Value;
+		//UE_LOG(LogTemp, Warning, TEXT("ToolsFunctionLibrary: ConectInfo: CurrentConectRow: %s"), *pair.Value);
+
 		FString Key = pair.Key;
-		KeepTrack.Add(","[0]);
+		KeepTrack.Add(",");
 
-		for (int32 m = 0; m < CurrentConectRow.Len(); m++)
+		TArray<FString> CurrentConectRowArray;
+		CurrentConectRow.ParseIntoArray(CurrentConectRowArray, DelimComma, true);
+
+		for (FString AtomIndex : CurrentConectRowArray)
 		{
-			TCHAR Char = CurrentConectRow[m];
-			//UE_LOG(LogTemp, Warning, TEXT("Char: %c"), *Char);
-
-			if (!KeepTrack.Contains(Key[0]))
+			if (!KeepTrack.Contains(Key))
 			{
-				KeepTrack.Add(Key[0]);
+				KeepTrack.Add(Key);
 			}
 
-			if (!KeepTrack.Contains(Char))
+			if (!KeepTrack.Contains(AtomIndex))
 			{
-				KeepTrack.Add(Char);
-				NewConectRow.AppendChar(Char);
+				KeepTrack.Add(AtomIndex);
+				NewConectRow.Append(AtomIndex);
 				NewConectRow.AppendChar(*TEXT(","));
 			}
 		}
@@ -580,7 +564,7 @@ TMap<FString, FString> UToolsFunctionLibrary::ConectInfo(FString& LoadedString)
 			FinalMap.Add(pair.Key, NewConectRow);
 			
 			//debugging
-			//UE_LOG(LogTemp, Warning, TEXT("FinalMap key, value: %s, %s"), *pair.Key, *NewConectRow);
+			//UE_LOG(LogTemp, Warning, TEXT("ToolsFunctionLibrary: ConectInfo: FinalMap key, value: %s, %s"), *pair.Key, *NewConectRow); // final check - output is expected
 		}		
 	}	
 

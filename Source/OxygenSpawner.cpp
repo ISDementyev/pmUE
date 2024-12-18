@@ -35,14 +35,15 @@ void AOxygenSpawner::BeginPlay()
 	FileData FD;
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
+	bool AtomOnly = FD.AtomOnly;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "O " };
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, false);
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, AtomOnly);
 	TransformsOxygen.Empty(NumberOfAtoms);
 
 	// generates data array of atoms to be spawned
-	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsOxygen, CentroidCoordinate, CurrentElement, false);
+	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsOxygen, CentroidCoordinate, CurrentElement, AtomOnly);
 
 	// spawns the actual static mesh
 	InstancedStaticMeshComponentOxygen->AddInstances(TransformsOxygen, true);

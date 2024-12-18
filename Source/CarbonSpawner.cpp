@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "CarbonSpawner.h"
 #include "ToolsFunctionLibrary.h"
 #include "FileData.h"
@@ -33,18 +34,22 @@ void ACarbonSpawner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// file-specific variables
+	// file-specific variables - should be kept in a separate file called by all atom spawner Actors
 	FileData FD;	
 	FString PDBContent = FD.PDBContent;
 	FVector CentroidCoordinate = FD.CentroidCoordinate;
+	bool AtomOnly = FD.AtomOnly;
 
 	// variables specific to this spawner
 	FString CurrentElement{ "C " };
-	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, false);
+	int32 NumberOfAtoms = UToolsFunctionLibrary::NumberOfAtomsSingleElement(PDBContent, CurrentElement, AtomOnly);
+	UE_LOG(LogTemp, Warning, TEXT("CarbonSpawner: NumberOfAtoms: %d"), NumberOfAtoms);
+
+	TArray<int32> CarbonSerials = UToolsFunctionLibrary::ElementIndices(PDBContent, CurrentElement, AtomOnly);
 	TransformsCarbon.Empty(NumberOfAtoms);
 
-	// generates data array of carbons to be spawned
-	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsCarbon, CentroidCoordinate, CurrentElement, false);
+	// generates data array of atoms to be spawned
+	UToolsFunctionLibrary::CCESAtomGeneration(PDBContent, TransformsCarbon, CentroidCoordinate, CurrentElement, AtomOnly);
 
 	// spawns the actual static mesh
 	InstancedStaticMeshComponentCarbon->AddInstances(TransformsCarbon, true);
