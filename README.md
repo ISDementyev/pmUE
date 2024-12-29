@@ -12,7 +12,7 @@ The current capabilities are shown below, for a small peptide seq: IKK. Appropri
 ![6A5J IKK Peptide](/Screenshots/6A5JSmallIKK.png "Spawned IKK peptide from 6A5J, smaller HUD for future edits")
 
 ### How to use
-First, open up any UE4 version. To be safe, you may use the same one I did, `4.27.2` on Windows.
+First, open up any UE4 version. To be safe, you may use the same one I did, `4.27.2` on Windows 10.
 
 Let's say your current C++ UE4 session/project name is `YourProjectName`. Any UE4 project has an associated `YourProjectName.Build.cs` file, that appears as the following:
 ```
