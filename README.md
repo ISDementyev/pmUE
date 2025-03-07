@@ -15,7 +15,7 @@ The current capabilities are shown below, for a small peptide seq: IKK. Appropri
 First, open up any UE4 version. To be safe, you may use the same one I did, `4.27.2` on Windows 10.
 
 Let's say your current C++ UE4 session/project name is `YourProjectName`. Any UE4 project has an associated `YourProjectName.Build.cs` file, that appears as the following:
-```
+```csharp
 using UnrealBuildTool;
 
 public class YourProjectName : ModuleRules
@@ -31,7 +31,7 @@ public class YourProjectName : ModuleRules
 }
 ```
 After you've downloaded the source code, you'll want to add the following:
-```
+```csharp
 using UnrealBuildTool;
 using System.IO;
 
